@@ -51,9 +51,16 @@
   font-size:medium;
   float:clear;
 }
+#Edge-button{
+  font-size:medium;
+  
+}
 .Canvas {
   text-align:center;
   height:600px;
   border:1px solid black;
 
+}
+.Nodetext{
+  width :50px;
 }
