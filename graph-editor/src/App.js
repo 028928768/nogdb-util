@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { Graph } from 'react-d3-graph';
 import './App.css';
 
-const data = {
+
+ let data = {
   nodes: [{ id: 'Harry' }, { id: 'Sally' }, { id: 'Alice' }],
   links: [{ source: 'Harry', target: 'Sally' }, { source: 'Harry', target: 'Alice' }]
 };
+  
 const myConfig = {
   nodeHighlightBehavior: true,
   node: {
@@ -43,8 +45,35 @@ const onMouseOutLink = function(source, target) {
 class App extends Component {
   constructor(props){
     super(props)
+    this.state= {
+      value: [data],
+      textvalue : " ",
+      test:""
+      
+    }
+    this.handleAddTodoItem = this.handleAddTodoItem.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    
   }
+    handleChange(e){
+      this.setState({
+        textvalue:e.target.value
+      })
+    }
+    handleAddTodoItem(){
+      this.state.value.push(this.state.textvalue)
+      this.setState(
+        this.state
+      )
+      this.state
+      console.log(this.state.value);
+      
+      
+     
+    }
+  
   render() {
+    let { value }  = this.state;
     return (
        <div className="App">
          <header className="App-header">  
@@ -53,7 +82,8 @@ class App extends Component {
          <div className="Top-Box" align="center">Limit</div>
          <p className="Display-msg">Displaying ... nodes, ... relationships. </p>
            <br/>
-           <button id="Addnode-button" onClick={this.increase}>Add node</button>
+           <input type="text" placeholder="Inputhere" className="text" onChange={this.handleChange} />
+           <button id="Addnode-button" onClick={this.handleAddTodoItem}>Add node</button>
            <button id="FullScreen-button" onClick={this.decrease}>Full screen</button>
            <button id="Clear-Canvas"> Clear Canvas </button>
 
