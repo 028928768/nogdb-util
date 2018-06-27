@@ -67,9 +67,17 @@
 }
 .Canvas {
   text-align:center;
-  height:600px;
+  height:400px;
   border:1px solid black;
 
+}
+.CanvasFullScreen {
+  test-align:center;
+  height:800px;
+  border:1px solid black;
+}
+#his-button {
+  font-size:medium;
 }
 #Modal-header{
   position:relative;
@@ -117,4 +125,7 @@
 }
 .Nodetext {
   width:70%;
+}
+#section {
+  float:right;
 }
