@@ -262,8 +262,6 @@ class App extends Component {
         this.setState(prevState => {
           const newGraph = { nodes: [], edges: [] };
 
-          // this.setGraphdata2()
-          console.log(prevState.nodeID)
           for(let ele3 in prevState.graph.nodes){
             if(prevState.graph.nodes[ele3].id === prevState.nodeID){
               newGraph.nodes.push(prevState.graph.nodes[ele3])
@@ -292,33 +290,37 @@ class App extends Component {
           };
         });
       
-        //  this.setGraphdata2();
+        
       }
       handleOutcoming = () => {
-        
-
-      //   for(let ele3 in graph1.nodes){
-      //     if(graph1.nodes[ele3].id == this.state.nodeID){
-      //       graph3.nodes.push(graph1.nodes[ele3])
-      //     }   
-      //   }
-      //   for(let ele1 in graph1.edges){
+        this.setState(prevState => {
+          const newOutGraph = { nodes: [], edges: [] };
+           for(let ele3 in prevState.graph.nodes){
+             if(prevState.graph.nodes[ele3].id === prevState.nodeID){
+               newOutGraph.nodes.push(prevState.graph.nodes[ele3])
+             }   
+           }
+           for(let ele1 in prevState.graph.edges){
           
-      //     if(graph1.edges[ele1].from == this.state.nodeID ){
-      //     graph3.edges.push(graph1.edges[ele1])
-      //     }   
+             if(prevState.graph.edges[ele1].from === prevState.nodeID ){
+             newOutGraph.edges.push(prevState.graph.edges[ele1])
+             }   
 
-      //   }
-      //   for(let ele1 in graph2.edges){
-      //     for(let ele3 in graph1.nodes){
-      //          if(graph3.edges[ele1].to == graph1.nodes[ele3].id ||graph1.nodes[ele3].id == this.state.nodeID)
-      //            graph3.nodes.push(graph1.nodes[ele3])
+           }
+           for(let ele1 in newOutGraph.edges){
+             for(let ele3 in prevState.graph.nodes){
+                  if(newOutGraph.edges[ele1].to === prevState.graph.nodes[ele3].id ||prevState.graph.nodes[ele3].id === prevState.nodeID)
+                    newOutGraph.nodes.push(prevState.graph.nodes[ele3])
           
-      //    }
-      //  } 
+            }
+          } 
 
 
-      //   this.setGraphdata3();
+          return {
+            graph: newOutGraph,
+            prevGraph: prevState.graph
+          };
+        });
       }
   
     
