@@ -94,13 +94,14 @@ class App extends Component {
     super(props)
     this.state= {
       graph: graph1,
-      prevGraph: null,
+      prevGraph: graph1,
       textvalue :" ",
       srcvalue: " ",
       dscvalue: " ",
       clear:[data],
       isActive:false,
       isActive2:false,
+      isActive3:false,
       page: 1,
       showMenu : false,
       isFullscreen:false,
@@ -223,6 +224,11 @@ class App extends Component {
       toggleModal2 = () =>{
         this.setState({
           isActive2:!this.state.isActive2
+        })
+      }
+      toggleEditnodeModal = () =>{
+        this.setState({
+          isActive3:!this.state.isActive3
         })
       }
       toggleShowMenu = () => {
@@ -448,10 +454,47 @@ class App extends Component {
            {
              this.state.showMenu === true ? (
            <div id="history-div"> Command Menu {NodeValue=this.state.nodeID}
-           <button title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
+           <button id='Incoming-button' title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
            {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
-           <button title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
-           <button> Button3 </button>
+           <button id='Outcoming-button' title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
+           <section>
+           <button id='Edit-button' onClick={this.toggleEditnodeModal}> Edit node{this.state.nodeID} </button>
+           <Modal isOpen={this.state.isActive3} contentLabel='Node Editor'
+           onRequestClose={this.toggleEditnodeModal} style={customCreateEdgeModal}>
+
+           <div id='edit-top-div'> Edit Node</div>
+            <div id='edit-middle-div'> Classname : User <br></br>
+                <div id='inside-editmid-div'> <br></br>
+                    <h5 id='Editnode-classname'>User </h5>
+                    <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleSrcChange}/>
+                    <select id="select-nodetype"  > <option value="String">String </option> 
+                                          <option value="Integer">Integer </option>
+                                          <option value="etc">Etc </option>
+                  </select> <br></br>
+                    {/* <h5 id='CreateDate'>CreateDate</h5> */}
+                     <form action="/action_page.php">CreateDate: <input type="date" name="bday"/> <input type="submit"/>
+                     <input type="time" id="myTime" value="22:15:00"/>
+                     <select id="select-nodetype"  > <option value="String">String </option> 
+                                          <option value="Integer">Integer </option>
+                                          <option value="etc">Etc </option>
+                     </select> 
+                     </form> 
+                    
+                   
+                    
+               </div>
+            </div>
+            <div id ="edge-bottom-div">
+            <hr></hr>
+            <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
+            <button id="Edge-button" onClick={this.handleAddEdge}>Save Change</button>
+            </div>
+
+
+           </Modal>  
+
+
+           </section>
            <button> Button4 </button>
            <button> Button5 </button>
            <button> Button6 </button>

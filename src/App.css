@@ -108,9 +108,22 @@
   margin-right:0;
   border:1px solid black;
 }
+#edit-top-div {
+  position:relative;
+  top:-9%;
+  height:20%;
+  margin-right:0;
+  border:1px solid black;
+}
 #edge-middle-div {
   position:relative;
   height:40%;
+  top:-10%;
+  border:1px solid black;
+}
+#edit-middle-div {
+  position:relative;
+  height:60%;
   top:-10%;
   border:1px solid black;
 }
@@ -128,4 +141,30 @@
 }
 #section {
   float:right;
+}
+#inside-editmid-div{
+  margin-top:2%;
+  margin-bottom:2%;
+  height:60%;
+  border:1px solid black;
+}
+#Editnode-classname{
+  display:inline-block;
+  margin-top:0%;
+  margin-right:10%;
+  margin-left:3%;
+  font-size:small;
+}
+#select-nodetype {
+  display :inline-block;
+  margin-left:3%;
+}
+.Node-editor {
+  width:60%;
+}
+#CreateDate{
+  margin-top:0%;
+  margin-left:3%;
+  margin-right:3%;
+  font-size:small;
 }
