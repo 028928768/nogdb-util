@@ -168,3 +168,16 @@
   margin-right:3%;
   font-size:small;
 }
+#top-deletenode-div {
+  position:relative;
+  top:-9%;
+  height:20%;
+  margin-right:0;
+  border:1px solid black;
+}
+#middle-deletenode-div {
+  position:relative;
+  height:60%;
+  top:-10%;
+  border:1px solid black;
+}

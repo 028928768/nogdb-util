@@ -101,7 +101,8 @@ class App extends Component {
       clear:[data],
       isActive:false,
       isActive2:false,
-      isActive3:false,
+      isEditNodeActive:false,
+      isDeleteNodeActivate:false,
       page: 1,
       showMenu : false,
       isFullscreen:false,
@@ -228,7 +229,12 @@ class App extends Component {
       }
       toggleEditnodeModal = () =>{
         this.setState({
-          isActive3:!this.state.isActive3
+          isEditNodeActive:!this.state.isEditNodeActive
+        })
+      }
+      toggleDeletenodeModal = () => {
+        this.setState({
+          isDeleteNodeActivate:!this.state.isDeleteNodeActivate
         })
       }
       toggleShowMenu = () => {
@@ -459,7 +465,7 @@ class App extends Component {
            <button id='Outcoming-button' title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
            <section>
            <button id='Edit-button' onClick={this.toggleEditnodeModal}> Edit node{this.state.nodeID} </button>
-           <Modal isOpen={this.state.isActive3} contentLabel='Node Editor'
+           <Modal isOpen={this.state.isEditNodeActive} contentLabel='Node Editor'
            onRequestClose={this.toggleEditnodeModal} style={customCreateEdgeModal}>
 
            <div id='edit-top-div'> Edit Node</div>
@@ -485,7 +491,7 @@ class App extends Component {
                </div>
             </div>
             <div id ="edge-bottom-div">
-            <hr></hr>
+            <br></br>
             <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
             <button id="Edge-button" onClick={this.handleAddEdge}>Save Change</button>
             </div>
@@ -495,10 +501,22 @@ class App extends Component {
 
 
            </section>
-           <button> Button4 </button>
-           <button> Button5 </button>
-           <button> Button6 </button>
-           
+           <button id='createRelation-button' title="create relationship"> CreateRelation </button>
+           <button id='removeNode-button' title="remove node from canvas"> Remove </button>
+           <section>
+           <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
+              <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
+              onRequestClose={this.toggleDeletenodeModal} style={customCreateEdgeModal}>
+                <div id="top-deletenode-div" > DeleteNode </div>
+                <div id="middle-deletenode-div" > Deleting node {this.state.nodeID} will permanantly be removed from your Database
+                </div>
+                <div id="bottom-deletenode-div" >
+                <button onClick={this.toggleDeletenodeModal}> No,keep Node</button>
+                <button > Yes,Delete Node! </button>
+                   </div>
+
+              </Modal>
+           </section>
             </div>
              
              ) : (
