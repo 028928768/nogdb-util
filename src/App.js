@@ -37,64 +37,129 @@ import './App.css';
   links: [{ source: 'Harry', target: 'Sally' }, { source: 'Harry', target: 'Alice' }]
 
 };
- let graph1 = {
-    nodes: [
-      {id: "1", label: 'Node 1'},
-      {id: "2", label: 'Node 2'},
-      {id: "3", label: 'Node 3'},
-      {id: "4", label: 'Node 4',title:'Popup show!!'},
-      {id: "5", label: 'Node 5'}
-    ],
-    edges: [
-      {from: "1", to: "2"},
-      {from: "1", to: "3"},
-      {from: "2", to: "4"},
-      {from: "2", to: "5"}
-    ]
-};
-// let graph2 = {
-//   nodes: [
-  
-//   ],
-//   edges: [
-    
-//   ]
-// };
-let graph3 = {
+let graphDB = {
   nodes: [
-
+    { id: "1", label: 'Bill', group: 'A' },
+    { id: "2", label: 'Queen', group: 'A' },
+    { id: "3", label: 'King', group: 'A' },
+    { id: "4", label: 'Jack', group: 'A', title: 'Popup show!!' },
+    { id: "5", label: 'Barry', group: 'A' },
+    { id: "6", label: 'Jane', group: 'B' },
+    { id: "7", label: 'John', group: 'B' },
+    { id: "8", label: 'Alex', group: 'B' },
+    { id: "9", label: 'Bob', group: 'B' },
+    { id: "10", label: 'Car', group: 'B' },
+    { id: "11", label: 'Death', group: 'C' },
+    { id: "12", label: 'Elf', group: 'C' },
+    { id: "13", label: 'Frank', group: 'C' },
+    { id: "14", label: 'Oliver', group: 'C' },
+    { id: "15", label: 'Ryu', group: 'C' },
+    { id: "16", label: 'Max', group: 'D' },
+    { id: "17", label: 'Leon', group: 'D' },
+    { id: "18", label: 'Chris', group: 'D' },
+    { id: "19", label: 'Jill', group: 'D' },
+    { id: "20", label: 'Herry', group: 'D' }
   ],
   edges: [
-
+    { from: "1", to: "2" },
+    { from: "1", to: "4" },
+    { from: "1", to: "15" },
+    { from: "1", to: "18" },
+    { from: "2", to: "7" },
+    { from: "2", to: "14" },
+    { from: "2", to: "19" },
+    { from: "3", to: "5" },
+    { from: "4", to: "2" },
+    { from: "6", to: "10" },
+    { from: "6", to: "11" },
+    { from: "7", to: "8" },
+    { from: "7", to: "19" },
+    { from: "8", to: "2" },
+    { from: "8", to: "6" },
+    { from: "9", to: "17" },
+    { from: "10", to: "1" },
+    { from: "10", to: "8" },
+    { from: "12", to: "5" },
+    { from: "12", to: "11" },
+    { from: "12", to: "15" },
+    { from: "13", to: "17" },
+    { from: "14", to: "20" },
+    { from: "16", to: "3" },
+    { from: "16", to: "7" },
+    { from: "17", to: "19" },
+    { from: "18", to: "20" },
+    { from: "19", to: "4" },
+    { from: "20", to: "1" }
   ]
 };
- let options = {
+ let graphCanvas = {
+  nodes: [
+    { id: "1", label: 'Bill', group: 'A' },
+    { id: "2", label: 'Queen', group: 'A' },
+    { id: "3", label: 'King', group: 'A' },
+    { id: "4", label: 'Jack', group: 'A', title: 'Popup show!!' },
+    { id: "5", label: 'Barry', group: 'A' }
+  ],
+  edges: [
+    { from: "1", to: "2" },
+    { from: "1", to: "4" },
+    { from: "3", to: "5" },
+    { from: "4", to: "2" }
+  ]
+};
+
+const options = {
+  groups: {
+    A: { color: { background: 'red', border: 'red' }, },
+    B: { color: { background: 'orange', border: 'orange' } },
+    C: { color: { background: 'green', border: 'green' } },
+    D: { color: { background: 'pink', border: 'pink' } },
+  },
   layout: {
     hierarchical: false
   },
   edges: {
-    color:{
-      color: "blue",
+    color: {
       hover: "blue",
-      highlight: "yellow"
+      highlight: "yellow",
+      inherit: 'from'
     }
   },
- 
-  interaction:{
-    hover:true
+  nodes: {
+    color: {
+      hover: {
+        border: "blue"
+      },
+      highlight: {
+        border: "yellow"
+      }
+    },
+    shape: "dot",
+    size: 25,
+    font:{
+      size: 22
+    }
+
+
   },
-  manipulation:{
-    enabled: true    
+  interaction: {
+    hover: true,
+    selectable: true,
+    selectConnectedEdges: true
+  },
+  manipulation: {
+    enabled: true
   }
 };
+
 
 
 class App extends Component {
   constructor(props){
     super(props)
     this.state= {
-      graph: graph1,
-      prevGraph: graph1,
+      graph: graphCanvas,
+      // prevGraph: graph1,
       textvalue :" ",
       srcvalue: " ",
       dscvalue: " ",
@@ -124,6 +189,7 @@ class App extends Component {
     this.handleIncoming = this.handleIncoming.bind(this);
     this.handleOutcoming = this.handleOutcoming.bind(this);
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
+    this.handleRemoveNode = this.handleRemoveNode.bind(this);
 
   }
     handleChange(e){
@@ -269,38 +335,25 @@ class App extends Component {
 
       }
       handleIncoming = () => {
-        
-
-        this.setState(prevState => {
-          const newGraph = { nodes: [], edges: [] };
-
-          for(let ele3 in prevState.graph.nodes){
-            if(prevState.graph.nodes[ele3].id === prevState.nodeID){
-              newGraph.nodes.push(prevState.graph.nodes[ele3])
-            }   
-          } 
-          for(let ele in prevState.graph.edges){
+      
+         
+          // for(let ele in prevState.graph.edges){
             
-            if(prevState.graph.edges[ele].to === prevState.nodeID ){
-              newGraph.edges.push(prevState.graph.edges[ele])
-            }   
+          //   if(prevState.graph.edges[ele].to === prevState.nodeID ){
+          //     newGraph.edges.push(prevState.graph.edges[ele])
+          //   }   
 
-          } console.log(newGraph.edges)
+          // } 
 
-          for(let ele in newGraph.edges){
-            for(let ele2 in prevState.graph.nodes){
-                  if(newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
-                  newGraph.nodes.push(prevState.graph.nodes[ele2])
+          // for(let ele in newGraph.edges){
+          //   for(let ele2 in prevState.graph.nodes){
+          //         if(newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
+          //         newGraph.nodes.push(prevState.graph.nodes[ele2])
             
-            }
-          } 
+          //   }
+          // } 
           
 
-          return {
-            graph: newGraph,
-            prevGraph: prevState.graph
-          };
-        });
       
         
       }
@@ -333,6 +386,23 @@ class App extends Component {
             prevGraph: prevState.graph
           };
         });
+      }
+      handleRemoveNode = () => {
+        let BackupNode =this.state.graph.nodes.slice()
+        let BackupEdges =this.state.graph.edges.slice()
+        // let index = this.state.graph.nodes.indexOf(this.state.nodeID);
+        for (let ele1 in BackupNode){
+          if(BackupNode[ele1].id === this.state.nodeID){
+            console.log(ele1);
+            BackupNode.splice(ele1,1);
+            
+          }
+        }
+       
+        console.log(this.state.graph.nodes)
+        this.setState(
+          {graph:{nodes:BackupNode,edges:BackupEdges}}
+       )
       }
   
     
@@ -442,7 +512,7 @@ class App extends Component {
               deselectNode : (function(event){
                 console.log(event),
                 this.toggleShowMenu();
-                this.setToPreviousGraph();
+                
 
               }).bind(this),
               showPopup : (function(event){
@@ -502,7 +572,7 @@ class App extends Component {
 
            </section>
            <button id='createRelation-button' title="create relationship"> CreateRelation </button>
-           <button id='removeNode-button' title="remove node from canvas"> Remove </button>
+           <button id='removeNode-button' title="remove node from canvas" onClick={this.handleRemoveNode}> Remove </button>
            <section>
            <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
               <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
