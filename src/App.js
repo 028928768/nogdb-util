@@ -193,6 +193,7 @@ class App extends Component {
     this.handleDeleteNode = this.handleDeleteNode.bind(this);
     this.AddToDatabase = this.AddToDatabase.bind(this);
     this.setFlagtoAddDatabase = this.setFlagtoAddDatabase.bind(this);
+    this.handleAddEdgeToDatabase = this.handleAddEdgeToDatabase.bind(this);
 
   }
     handleChange(e){
@@ -299,7 +300,7 @@ class App extends Component {
 
 
      ////////////// handle
-    handleAddEdge(){
+    handleAddEdgeToDatabase(){
       let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
     let copy3 =this.state.graph.nodes.slice()
     let copy4 =this.state.graph.edges.slice()
@@ -545,7 +546,7 @@ class App extends Component {
             </div>
             <div id ="edge-bottom-div">
             <button id="cancel-edge" onClick={this.toggleModal2}>Cancel </button>
-            <button id="Edge-button" onClick={this.handleAddEdge}>Create edge2</button>
+            <button id="Edge-button" onClick={this.handleAddEdgeToDatabase}>Create edge2</button>
             </div>
 
             </Modal>
