@@ -216,6 +216,11 @@ class App extends Component {
         flagisAddtoCanvas:false
       })
     }
+    setFlagtoAddCanvas = () =>{
+      this.setState({
+        flagisAddtoCanvas:true
+      })
+    }
     
     handleAddbuttonToCanvas(){
 
@@ -391,57 +396,63 @@ class App extends Component {
 
       }
       handleIncoming = () => {
+          let CanvasNode = this.state.graph.nodes.slice();
+          let CanvasEdge = this.state.graph.edges.slice();
        
         this.setFlagtoAddDatabase;
           for(let ele in graphDB.edges){
             if(graphDB.edges[ele].to === this.state.nodeID ){
-
-              newGraph.edges.push(prevState.graph.edges[ele])
+              CanvasEdge.push(graphDB.edges[ele])
+              
             }   
 
           } 
+          console.log(this.state.graph.edges);
 
-          for(let ele in newGraph.edges){
-            for(let ele2 in prevState.graph.nodes){
-                  if(newGraph.edges[ele].from === prevState.graph.nodes[ele2].id || prevState.graph.nodes[ele2].id === prevState.nodeID)
-                  newGraph.nodes.push(prevState.graph.nodes[ele2])
+          for(let ele in CanvasEdge){
+            for(let ele2 in graphDB.nodes){
+                  if(CanvasEdge[ele].from === graphDB.nodes[ele2].id || graphDB.nodes[ele2].id === this.state.nodeID)
+                  CanvasNode.push(graphDB.nodes[ele2])
             
             }
           } 
+          
+          this.setState(
+            {graph:{nodes:CanvasNode,edges:CanvasEdge}}
+          )
           
 
       
         
       }
       handleOutcoming = () => {
-        this.setState(prevState => {
-          const newOutGraph = { nodes: [], edges: [] };
-           for(let ele3 in prevState.graph.nodes){
-             if(prevState.graph.nodes[ele3].id === prevState.nodeID){
-               newOutGraph.nodes.push(prevState.graph.nodes[ele3])
+        let CanvasNode = this.state.graph.nodes.slice();
+        let CanvasEdge = this.state.graph.edges.slice();
+        
+           for(let ele3 in graphDB.nodes){
+             if(graphDB.nodes[ele3].id === this.state.nodeID){
+               CanvasNode.push(graphDB.nodes[ele3])
              }   
            }
-           for(let ele1 in prevState.graph.edges){
+           for(let ele1 in graphDB.edges){
           
-             if(prevState.graph.edges[ele1].from === prevState.nodeID ){
-             newOutGraph.edges.push(prevState.graph.edges[ele1])
+             if(graphDB.edges[ele1].from === this.state.nodeID ){
+             CanvasEdge.push(graphDB.edges[ele1])
              }   
 
            }
-           for(let ele1 in newOutGraph.edges){
-             for(let ele3 in prevState.graph.nodes){
-                  if(newOutGraph.edges[ele1].to === prevState.graph.nodes[ele3].id ||prevState.graph.nodes[ele3].id === prevState.nodeID)
-                    newOutGraph.nodes.push(prevState.graph.nodes[ele3])
+           for(let ele1 in CanvasEdge){
+             for(let ele3 in graphDB.nodes){
+                  if(CanvasEdge[ele1].to === graphDB.nodes[ele3].id ||graphDB.nodes[ele3].id === this.state.nodeID)
+                    CanvasNode.push(graphDB.nodes[ele3])
           
             }
           } 
+          this.setState(
+            {graph:{nodes:CanvasNode,edges:CanvasEdge}}
+          )
 
-
-          return {
-            graph: newOutGraph,
-            prevGraph: prevState.graph
-          };
-        });
+          
       }
       handleRemoveNode = () => {
         let BackupNode =this.state.graph.nodes.slice()
