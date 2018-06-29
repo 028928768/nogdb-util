@@ -175,11 +175,10 @@ class App extends Component {
   
       
     }
-    this.handleAddTodoItem = this.handleAddTodoItem.bind(this);
+    this.handleAddbuttonToCanvas = this.handleAddbuttonToCanvas.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSrcChange = this.handleSrcChange.bind(this);
     this.handleDscChange = this.handleDscChange.bind(this);
-    this.handleDelTodoItem = this.handleAddTodoItem.bind(this);
     this.handleAddEdge = this.handleAddEdge.bind(this);
     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
@@ -190,6 +189,7 @@ class App extends Component {
     this.handleOutcoming = this.handleOutcoming.bind(this);
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
     this.handleRemoveNode = this.handleRemoveNode.bind(this);
+    this.AddToDatabase = this.AddToDatabase.bind(this);
 
   }
     handleChange(e){
@@ -209,7 +209,7 @@ class App extends Component {
     }
     
     
-    handleAddTodoItem(){
+    handleAddbuttonToCanvas(){
 
       let newNode ={id:this.state.textvalue,label:this.state.textvalue}
       let copy1 =this.state.graph.nodes.slice()
@@ -239,6 +239,55 @@ class App extends Component {
         )
         
       } 
+    }
+
+
+
+
+    AddToDatabase(){
+
+      //let newNode ={id:this.state.textvalue,label:this.state.textvalue}
+      let newNode =[{id: "20", label: 'Herry', group: 'D'},{id: "21", label: 'shizuka', group: 'A'}]
+      
+      // let copy1 =this.state.graph.nodes.slice()
+      // let copy2 =this.state.graph.edges.slice()
+      let check ,check2
+      //console.log(graph.nodes[1])
+      for(let ele in graphDB.nodes){
+        for(let ele2 in newNode){
+          
+          if ((JSON.stringify(newNode[ele2])) === JSON.stringify(graphDB.nodes[ele])){
+            check = false
+            
+            break         
+          }
+          else{
+            console.log(newNode[ele2])
+            check = true
+            
+          }
+          console.log(check)
+          if(check == true || check == undefined){
+            graphDB.nodes.push(newNode[ele2])  
+            check2 =true
+            //console.log(this.state.graph.edges)
+            
+            this.setState(
+              {graph:{nodes:graphDB.nodes,edges:graphDB.edges}}
+            )
+           
+          } 
+          
+        }
+        if (check2 == true){
+          break
+        }
+        //  console.log(ele)
+        
+      }
+      console.log(graphDB) 
+      
+      
     }
     handleAddEdge(){
       let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
@@ -336,6 +385,8 @@ class App extends Component {
       }
       handleIncoming = () => {
       
+        //conditton
+       
          
           // for(let ele in prevState.graph.edges){
             
@@ -460,7 +511,7 @@ class App extends Component {
                ) : (
                 <div id="modal-bottom-div"> Bottom modal 2 <hr></hr>
                 <button id="modal-cancel-button" onClick={this.toggleModal}> Cancel </button>
-                <button id="Addnode-button" onClick={this.handleAddTodoItem} >Add node</button>
+                <button id="Addnode-button" onClick={this.AddToDatabase} >Add node</button>
                 </div>
 
                )
