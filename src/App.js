@@ -196,6 +196,7 @@ class App extends Component {
     this.AddEdgeToDatabase = this.AddEdgeToDatabase.bind(this);
     this.AddNodeToCanvas = this.AddNodeToCanvas.bind(this);
     
+    
   }
     handleChange(e){
       this.setState({
@@ -282,7 +283,7 @@ class App extends Component {
       if(JSON.stringify(CanvasEdge).includes(JSON.stringify(newEdge[ele]))===false){
         CanvasEdge.push(newEdge[ele])
       }
-    }
+    } this.toggleModal2();
     this.setState(
       {graph:{nodes:CanvasNode,edges:CanvasEdge}}
     )
@@ -409,34 +410,36 @@ class App extends Component {
           } 
           console.log(Array2);     
            this.AddNodeToCanvas(Array2)
-          console.log(this.state.graph)   
+           
       }
       handleOutcoming = () => {
         let CanvasNode = this.state.graph.nodes.slice();
         let CanvasEdge = this.state.graph.edges.slice();
-        
+        let Array1 = [];
+        let Array2 = [];
+        let Array3 = [];
            for(let ele3 in graphDB.nodes){
              if(graphDB.nodes[ele3].id === this.state.nodeID){
-               CanvasNode.push(graphDB.nodes[ele3])
+               Array1.push(graphDB.nodes[ele3])
+               
              }   
-           }
+           }this.AddNodeToCanvas(Array1)
            for(let ele1 in graphDB.edges){
           
              if(graphDB.edges[ele1].from === this.state.nodeID ){
-             CanvasEdge.push(graphDB.edges[ele1])
+             Array2.push(graphDB.edges[ele1])
              }   
 
            }
-           for(let ele1 in CanvasEdge){
+           this.AddEdgetoCanvas(Array2);
+           for(let ele1 in Array2){
              for(let ele3 in graphDB.nodes){
-                  if(CanvasEdge[ele1].to === graphDB.nodes[ele3].id ||graphDB.nodes[ele3].id === this.state.nodeID)
-                    CanvasNode.push(graphDB.nodes[ele3])
-          
+                  if(Array2[ele1].to === graphDB.nodes[ele3].id ||graphDB.nodes[ele3].id === this.state.nodeID)
+                    Array3.push(graphDB.nodes[ele3])
+                  
             }
-          } 
-          this.setState(
-            {graph:{nodes:CanvasNode,edges:CanvasEdge}}
-          )
+          }  this.AddNodeToCanvas(Array3);
+          
 
           
       }
