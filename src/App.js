@@ -176,11 +176,11 @@ class App extends Component {
   
       
     }
-    this.handleAddbuttonToCanvas = this.handleAddbuttonToCanvas.bind(this);
+    this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSrcChange = this.handleSrcChange.bind(this);
     this.handleDscChange = this.handleDscChange.bind(this);
-    this.handleAddEdgetoCanvas = this.handleAddEdgetoCanvas.bind(this);
+    this.AddEdgetoCanvas = this.AddEdgetoCanvas.bind(this);
     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
     this.toggleShowMenu = this.toggleShowMenu.bind(this);
@@ -191,10 +191,11 @@ class App extends Component {
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
     this.handleRemoveNode = this.handleRemoveNode.bind(this);
     this.handleDeleteNode = this.handleDeleteNode.bind(this);
-    this.AddToDatabase = this.AddToDatabase.bind(this);
+    this.AddNodeToDatabase = this.AddNodeToDatabase.bind(this);
     this.setFlagtoAddDatabase = this.setFlagtoAddDatabase.bind(this);
-    this.handleAddEdgeToDatabase = this.handleAddEdgeToDatabase.bind(this);
-
+    this.AddEdgeToDatabase = this.AddEdgeToDatabase.bind(this);
+    this.AddNodeToCanvas = this.AddNodeToCanvas.bind(this);
+    
   }
     handleChange(e){
       this.setState({
@@ -222,99 +223,86 @@ class App extends Component {
       })
     }
     
-    handleAddbuttonToCanvas(){
+    //Incommingbutton(){
+     // -get array [value]
+     // -Add to canvas()
+    //}
+    //Addtodatabase()
+    //Addtocanvas()
 
-      let newNode ={id:this.state.textvalue,label:this.state.textvalue}
-      let copy1 =this.state.graph.nodes.slice()
-      let copy2 =this.state.graph.edges.slice()
+    handleAddNodebutton(){
+
+      let newNode =[{id:this.state.textvalue,label:this.state.textvalue}]
+      // let CanvasNode =this.state.graph.nodes.slice()
+      // let CanvasEdge =this.state.graph.edges.slice()
       let check 
-      //console.log(graph.nodes[1])
-      for(let ele in copy1){
-        //  console.log(ele)
-        if ((JSON.stringify(newNode)) === JSON.stringify(copy1[ele])){
+    
+      this.AddNodeToDatabase(newNode)
+      this.AddNodeToCanvas(newNode)
+      
+
+      this.toggleModal();
+    }
+    AddNodeToDatabase = (newNode) =>{ 
+        
+        for(let ele in newNode){
+          if(JSON.stringify(graphDB.nodes).includes(JSON.stringify(newNode[ele]))===false){
+            graphDB.nodes.push(newNode[ele]) 
+          }             
+        }
+
+        // console.log(graphDB.nodes)
+       
   
-          check = false
-          
-          break         
-        }
-        else{
-        
-          check = true
-          
-        }
-      } 
-      if(check == true || check == undefined){
-        copy1.push(newNode)  
-        //console.log(this.state.graph.edges)
-        console.log(copy1)
-        this.setState(
-          {graph:{nodes:copy1,edges:copy2}}
-        )
-        
-      } 
     }
+    AddNodeToCanvas = (newNode) => {
+      let CanvasNode = this.state.graph.nodes.slice();
+      let CanvasEdge = this.state.graph.edges.slice();
 
-
-
-
-    AddToDatabase = () =>{
-      let newNode;
-      if(this.state.flagisAddtoCanvas === true){
-        newNode =[{id:this.state.textvalue,label:this.state.textvalue}]
-      } else if(this.state.flagisAddtoCanvas === false ){
-       newNode =[{id: "21", label: 'shizuka', group: 'A'},{id: "20", label: 'Herry', group: 'D'},{id:"25",label:'Doraemon',group:'D'}]
+      for(let ele in newNode){
+        if(JSON.stringify(CanvasNode).includes(JSON.stringify(newNode[ele]))===false){
+          CanvasNode.push(newNode[ele]) 
+        }             
       }
-     
+      this.setState({
+        graph:{nodes:CanvasNode,edges:CanvasEdge}
+      })
       
-        for(let ele2 in newNode){
-          //console.log(JSON.stringify(graphDB.nodes))
-          //console.log(JSON.stringify(newNode[ele2]))
-          //console.log()
-          if(JSON.stringify(graphDB.nodes).includes(JSON.stringify(newNode[ele2]))===false){
-            graphDB.nodes.push(newNode[ele2]) 
-          }
-         
-       
+    }
+    handleCreateEdgebutton = () =>{
+      let newEdge =[{from: this.state.srcvalue,to: this.state.dscvalue}]
+      this.AddEdgeToDatabase(newEdge);
+      this.AddEdgetoCanvas(newEdge);
+    }
+  
+    AddEdgetoCanvas = (newEdge) =>{
+    let CanvasNode =this.state.graph.nodes.slice()
+    let CanvasEdge =this.state.graph.edges.slice()
+    for(let ele in newEdge){     
+      if(JSON.stringify(CanvasEdge).includes(JSON.stringify(newEdge[ele]))===false){
+        CanvasEdge.push(newEdge[ele])
+      }
+    }
+    this.setState(
+      {graph:{nodes:CanvasNode,edges:CanvasEdge}}
+    )
+    }
+  
+     
+    AddEdgeToDatabase = (newEdge) => {
+
+      for(let ele in newEdge){     
+        if(JSON.stringify(graphDB.edges).includes(JSON.stringify(newEdge[ele]))===false){
+          graphDB.edges.push(newEdge[ele])
         }
-
-        console.log(graphDB.nodes)
-       
-      
-    
-      
-       this.handleAddbuttonToCanvas()
-    }
-    handleAddEdgetoCanvas(){
-      let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
-    let copy3 =this.state.graph.nodes.slice()
-    let copy4 =this.state.graph.edges.slice()
-    copy4.push(newEdge)
-    console.log(copy4)
-    this.setState(
-      {graph:{nodes:copy3,edges:copy4}}
-    )
-    }
-    handleClearCanvas(){
-    
-      this.setState(
-         {graph:{nodes:[],edges:[]}}
-      )
      
+      }
+    console.log(graphDB)
+    
+    
     }
 
-
-
-     ////////////// handle
-    handleAddEdgeToDatabase(){
-      let newEdge ={from: this.state.srcvalue,to: this.state.dscvalue}
-    let copy3 =this.state.graph.nodes.slice()
-    let copy4 =this.state.graph.edges.slice()
-    copy4.push(newEdge)
-    console.log(copy4)
-    this.setState(
-      {graph:{nodes:copy3,edges:copy4}}
-    )
-    }
+    
     handleClearCanvas(){
     
       this.setState(
@@ -398,32 +386,30 @@ class App extends Component {
       handleIncoming = () => {
           let CanvasNode = this.state.graph.nodes.slice();
           let CanvasEdge = this.state.graph.edges.slice();
-       
-        this.setFlagtoAddDatabase;
+          let Array1 = [];
+          let Array2 = [];
           for(let ele in graphDB.edges){
             if(graphDB.edges[ele].to === this.state.nodeID ){
-              CanvasEdge.push(graphDB.edges[ele])
-              
+             // CanvasEdge.push(graphDB.edges[ele])
+              Array1.push(graphDB.edges[ele])
+             
             }   
-
+            
           } 
-          console.log(this.state.graph.edges);
+          console.log(Array1);
+          this.AddEdgetoCanvas(Array1)
 
           for(let ele in CanvasEdge){
             for(let ele2 in graphDB.nodes){
                   if(CanvasEdge[ele].from === graphDB.nodes[ele2].id || graphDB.nodes[ele2].id === this.state.nodeID)
-                  CanvasNode.push(graphDB.nodes[ele2])
-            
+                  //  CanvasNode.push(graphDB.nodes[ele2])
+                   Array2.push(graphDB.nodes[ele])
+              
             }
           } 
-          
-          this.setState(
-            {graph:{nodes:CanvasNode,edges:CanvasEdge}}
-          )
-          
-
-      
-        
+          console.log(Array2);     
+          this.AddNodeToCanvas(Array2)
+          console.log(this.state.graph)   
       }
       handleOutcoming = () => {
         let CanvasNode = this.state.graph.nodes.slice();
@@ -537,7 +523,7 @@ class App extends Component {
                ) : (
                 <div id="modal-bottom-div"> Bottom modal 2 <hr></hr>
                 <button id="modal-cancel-button" onClick={this.toggleModal}> Cancel </button>
-                <button id="Addnode-button" onClick={this.AddToDatabase} >Add node</button>
+                <button id="Addnode-button" onClick={this.handleAddNodebutton} >Add node</button>
                 </div>
 
                )
@@ -557,7 +543,7 @@ class App extends Component {
             </div>
             <div id ="edge-bottom-div">
             <button id="cancel-edge" onClick={this.toggleModal2}>Cancel </button>
-            <button id="Edge-button" onClick={this.handleAddEdgeToDatabase}>Create edge2</button>
+            <button id="Edge-button" onClick={this.handleCreateEdgebutton}>Create edge2</button>
             </div>
 
             </Modal>
@@ -640,7 +626,7 @@ class App extends Component {
             <div id ="edge-bottom-div">
             <br></br>
             <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
-            <button id="Edge-button" onClick={this.handleAddEdge}>Save Change</button>
+            <button id="Edge-button" >Save Change</button>
             </div>
 
 
