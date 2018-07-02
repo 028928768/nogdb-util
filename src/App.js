@@ -159,7 +159,6 @@ class App extends Component {
     super(props)
     this.state= {
       graph: graphCanvas,
-      // prevGraph: graph1,
       textvalue :" ",
       srcvalue: " ",
       dscvalue: " ",
@@ -172,6 +171,7 @@ class App extends Component {
       showMenu : false,
       isFullscreen:false,
       nodeID :" ",
+      nodeClass:" ",
       flagisAddtoCanvas:true
   
       
@@ -186,6 +186,7 @@ class App extends Component {
     this.toggleShowMenu = this.toggleShowMenu.bind(this);
     this.handleFullscreen = this.handleFullscreen.bind(this);
     this.handleNodeID = this.handleNodeID.bind(this);
+    this.handleNodeClass = this.handleNodeClass.bind(this);
     this.handleIncoming = this.handleIncoming.bind(this);
     this.handleOutcoming = this.handleOutcoming.bind(this);
     this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
@@ -224,13 +225,6 @@ class App extends Component {
       })
     }
     
-    //Incommingbutton(){
-     // -get array [value]
-     // -Add to canvas()
-    //}
-    //Addtodatabase()
-    //Addtocanvas()
-
     handleAddNodebutton(){
 
       let newNode =[{id:this.state.textvalue,label:this.state.textvalue}]
@@ -274,6 +268,7 @@ class App extends Component {
       let newEdge =[{from: this.state.srcvalue,to: this.state.dscvalue}]
       this.AddEdgeToDatabase(newEdge);
       this.AddEdgetoCanvas(newEdge);
+      this.toggleModalCreateEdge();
     }
   
     AddEdgetoCanvas = (newEdge) =>{
@@ -283,10 +278,11 @@ class App extends Component {
       if(JSON.stringify(CanvasEdge).includes(JSON.stringify(newEdge[ele]))===false){
         CanvasEdge.push(newEdge[ele])
       }
-    } this.toggleModal2();
+    } 
     this.setState(
       {graph:{nodes:CanvasNode,edges:CanvasEdge}}
     )
+    
     }
   
      
@@ -336,13 +332,13 @@ class App extends Component {
           graph:this.state.prevGraph
         })
        }
-      toggleModal = () => {
+      toggleModalAddNode = () => {
         this.setState({
           isActive:!this.state.isActive,
           page :1
         })
       }
-      toggleModal2 = () =>{
+      toggleModalCreateEdge = () =>{
         this.setState({
           isActive2:!this.state.isActive2
         })
@@ -384,6 +380,24 @@ class App extends Component {
         })
 
       }
+      handleNodeClass (nodeclass){
+        let key,keys = [];
+        for (key in nodeclass){
+          keys.push(key);
+        }
+        console.log(keys);
+        // for (let ele in this.state.graph.nodes){
+        //   if(this.state.graph.nodes.group.includes(nodeclass[ele]) ===true && this.state.graph.nodes.id == this.state.nodeID){
+        //     this.setState ({
+        //       nodeClass: Object.keys(nodeclass)
+        //     })
+        //   }
+        // }
+        this.setState ({
+          nodeClass: keys
+        })
+        console.log(this.state.nodeClass);
+    }
       handleIncoming = () => {
           let CanvasNode = this.state.graph.nodes.slice();
           let CanvasEdge = this.state.graph.edges.slice();
@@ -485,13 +499,22 @@ class App extends Component {
          <p className="App-intro"> NogDB Graph UI </p> 
            )
          }
+         <div className="Left-tab">
+         <div id="topbar-prop"> Node <button>Hide </button></div>
+         <div id="properties-prop"> Properties</div>
+         <div id="setting-prop"> Setting </div>
+              @rid    :  {this.state.nodeID} <br></br>
+              @class  :  {this.state.nodeClass} <br></br>
+         </div>
+         
          {
            this.state.isFullscreen === true ? (
              null
            ) : (
-         <div className="Top-Box" align="center">Limit</div>
+          <div className="Top-Box" align="center">Limit</div>
            )
          }
+         
          {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
            <br/>
             <section>
@@ -572,6 +595,7 @@ class App extends Component {
               selectNode : (function(event){
                 console.log(event);
                 this.handleNodeID(event.nodes);
+                this.handleNodeClass(options.groups);
                 this.toggleShowMenu();
                 console.log(event.nodes)
               }).bind(this),
