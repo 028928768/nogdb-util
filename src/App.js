@@ -390,25 +390,25 @@ class App extends Component {
           let Array2 = [];
           for(let ele in graphDB.edges){
             if(graphDB.edges[ele].to === this.state.nodeID ){
-             // CanvasEdge.push(graphDB.edges[ele])
-              Array1.push(graphDB.edges[ele])
+              // CanvasEdge.push(graphDB.edges[ele])
+               Array1.push(graphDB.edges[ele])
              
             }   
             
           } 
           console.log(Array1);
-          this.AddEdgetoCanvas(Array1)
+           this.AddEdgetoCanvas(Array1)
 
-          for(let ele in CanvasEdge){
+          for(let ele in Array1){
             for(let ele2 in graphDB.nodes){
-                  if(CanvasEdge[ele].from === graphDB.nodes[ele2].id || graphDB.nodes[ele2].id === this.state.nodeID)
-                  //  CanvasNode.push(graphDB.nodes[ele2])
-                   Array2.push(graphDB.nodes[ele])
+                  if(Array1[ele].from === graphDB.nodes[ele2].id || graphDB.nodes[ele2].id === this.state.nodeID)
+                    // CanvasNode.push(graphDB.nodes[ele2])
+                    Array2.push(graphDB.nodes[ele2])
               
             }
           } 
           console.log(Array2);     
-          this.AddNodeToCanvas(Array2)
+           this.AddNodeToCanvas(Array2)
           console.log(this.state.graph)   
       }
       handleOutcoming = () => {
