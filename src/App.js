@@ -166,6 +166,7 @@ class App extends Component {
       textvalue :" ",
       srcvalue: " ",
       dscvalue: " ",
+      editnodename:" ",
       clear:[data],
       isAddNodeActive:false,
       isAddEdgeActive2:false,
@@ -190,6 +191,7 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSrcChange = this.handleSrcChange.bind(this);
     this.handleDscChange = this.handleDscChange.bind(this);
+    this.handleEditNodeName = this.handleEditNodeName.bind(this);
     this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
     this.handleClearCanvas = this.handleClearCanvas.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
@@ -216,6 +218,7 @@ class App extends Component {
     this.setHideprop = this.setHideprop.bind(this);
     this.toggle = this.toggle.bind(this);
     this.handleNodeID2= this.handleNodeID2.bind(this)
+    this.updateNodeName = this.updateNodeName.bind(this)
   }
     toggle = (tab) =>{
       if(this.state.activeTab !== tab){
@@ -248,6 +251,37 @@ class App extends Component {
       this.setState({
         dscvalue:e.target.value
       })
+    }
+    handleEditNodeName(e){
+      this.setState({
+        editnodename:e.target.value
+      })
+      
+    }
+    setNewNodeName = (ele) => {
+   
+        
+     
+    }
+    updateNodeName(){
+      let CanvasNode = this.state.graph.nodes.slice();
+      let CanvasEdge = this.state.graph.edges.slice();
+      for (let ele in CanvasNode){
+        if(CanvasNode[ele].id === this.state.nodeID){
+          // this.setNewNodeName(ele)
+          graphDB.nodes[ele].label = this.state.editnodename
+          CanvasNode[ele].label = this.state.editnodename
+    
+          
+        }
+
+      }
+      // console.log(graphCanvas.nodes)
+      this.setState({
+        graph: { nodes: CanvasNode, edges: CanvasEdge }
+      })
+      
+     //console.log(this.state.graph.nodes)
     }
     setFlagtoAddDatabase = () =>{
       this.setState({
@@ -598,7 +632,7 @@ class App extends Component {
          }
          
          {
-           this.state.isPropertyDisplay === true? (
+           this.state.isPropertyDisplay === true?  (
          <div className="Left-tab">
          <div id="topbar-prop"> Node <button onClick={this.setHideprop}>Hide </button></div>
 
@@ -647,22 +681,20 @@ class App extends Component {
             </Row>
           </TabPane>
         </TabContent>
-         {/* <div id="properties-prop" onClick={console.log("Preoperties is clicked!")}> Properties</div>
-         <div id="setting-prop"> Setting </div>
-              @rid    :  {this.state.nodeID} <br></br>
-              @class  :  {this.state.nodeClass} <br></br>
-              CreatedDate : {this.state.CreateDate}     <br></br>
-              name    :  {this.state.NodeName}  <br></br> */}
+         
          </div>
-           ) : (
+           ) :  (
              null
            )
          
          }
+
+
+
          {
            this.state.isFullscreen === true ? (
              null
-           ) : (
+           )  : (
           <div className="Top-Box" align="center">Limit</div>  
            )
          }
@@ -743,8 +775,8 @@ class App extends Component {
           <div id='edit-top-div'> Edit Node : {this.state.nodeID}</div>
            <div id='edit-middle-div'> Classname : {this.state.nodeClass} <br></br>
                <div id='inside-editmid-div'> <br></br>
-                   <h5 id='Editnode-classname'>User </h5>
-                   <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleSrcChange}/>
+                   <h5 id='Editnode-classname'>name </h5>
+                   <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleEditNodeName}/>
                    <select id="select-nodetype"  > <option value="String">String </option> 
                                          <option value="Integer">Integer </option>
                                          <option value="etc">Etc </option>
@@ -762,14 +794,13 @@ class App extends Component {
            <div id ="edge-bottom-div">
            <br></br>
            <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
-           <button id="Edge-button" >Save Change</button>
+           <button id="Edge-button" onClick={this.updateNodeName} >Save Change</button>
            </div>
 
           </Modal>  
           {/* </section> */}
           <button id='createRelation-button' title="create relationship" onClick={this.handleCreateRelation}> CreateRelation </button>
           <button id='removeNode-button' title="remove node from canvas" onClick={this.handleRemoveNode}> Remove </button>
-          <section>
           <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
              <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
              onRequestClose={this.toggleDeletenodeModal} style={customCreateEdgeModal}>
@@ -782,7 +813,7 @@ class App extends Component {
                   </div>
 
              </Modal>
-          </section>
+          
            </div>
             
             ) : (
@@ -827,8 +858,9 @@ class App extends Component {
                 this.getNodeName();
                 this.getCreateDate();
                 this.toggleShowMenu();
-                this.setDisplayprop();
-                //  console.log(event.nodes)
+
+                // this.setDisplayprop();
+                
                 
                  
                  
@@ -841,7 +873,12 @@ class App extends Component {
                 
 
               }).bind(this),
-              showPopup : (function(event){
+              selectEdge : (function(event){
+                this.setDisplayprop();
+                
+            
+              }).bind(this),
+              deselectEdge : (function(event){
                 //console.log(event);
                 //console.log("This is popup!!")
             
