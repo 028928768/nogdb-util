@@ -258,30 +258,37 @@ class App extends Component {
       })
       
     }
-    setNewNodeName = (ele) => {
-   
-        
-     
-    }
-    updateNodeName(){
-      let CanvasNode = this.state.graph.nodes.slice();
-      let CanvasEdge = this.state.graph.edges.slice();
-      for (let ele in CanvasNode){
-        if(CanvasNode[ele].id === this.state.nodeID){
-          // this.setNewNodeName(ele)
-          graphDB.nodes[ele].label = this.state.editnodename
-          CanvasNode[ele].label = this.state.editnodename
-    
-          
+    setNewNodeName = (nodeID, newName) => {
+      this.setState(prevState => {
+        let canvasNode = prevState.graph.nodes.slice();
+        let canvasEdge = prevState.graph.edges.slice();
+        for (let ele in canvasNode){
+          if(canvasNode[ele].id === nodeID){
+            
+            graphDB.nodes[ele].label = newName
+            const updatedNode = {
+              ...canvasNode[ele],
+              label: newName
+            };
+            canvasNode[ele] = updatedNode;
+            console.log(canvasNode[ele]);
+            
+          }
+
         }
 
-      }
-      // console.log(graphCanvas.nodes)
-      this.setState({
-        graph: { nodes: CanvasNode, edges: CanvasEdge }
-      })
-      
-     //console.log(this.state.graph.nodes)
+        return {
+          graph: {
+            nodes: canvasNode,
+            edges: canvasEdge
+          }
+        };
+      });
+    }
+    updateNodeName(){
+      this.setNewNodeName(this.state.nodeID, this.state.editnodename);      
+      console.log(this.state.graph.nodes)
+      this.toggleEditnodeModal();
     }
     setFlagtoAddDatabase = () =>{
       this.setState({
@@ -296,7 +303,7 @@ class App extends Component {
     
     handleAddNodebutton(){
 
-      let newNode =[{id:this.state.textvalue,label:this.state.textvalue}]
+      let newNode =[{id:this.state.textvalue,label:this.state.textvalue,group:this.state.group.value}]
       this.AddNodeToDatabase(newNode)
       this.AddNodeToCanvas(newNode,this.state.graph.edges);
       this.toggleModalAddNode();
@@ -619,18 +626,32 @@ class App extends Component {
     
   render() {
     let { value }  = this.state;
+
+    let aElem = <div>111</div>;
+    // if () {
+    //   aElem = <div>222</div>; 
+    // } else if () {
+    //   aElem = <div>333</div>; 
+
+    // } else if () {
+    //   aElem = <div>444</div>; 
+      
+    // }
+
+    let p;
+    if (this.state.isFullscreen === true){
+      p = null;
+    }
+    else {
+      p = <p className="App-intro"> NogDB Graph UI </p>;
+    }
+
     return (
        <div className="App">
          <header className="App-header">  
          </header>
-         {
-           this.state.isFullscreen ===true? (
-             null
-           ) : (
-         <p className="App-intro"> NogDB Graph UI </p> 
-           )
-         }
-         
+         { p }
+         { aElem }
          {
            this.state.isPropertyDisplay === true?  (
          <div className="Left-tab">
@@ -859,7 +880,7 @@ class App extends Component {
                 this.getCreateDate();
                 this.toggleShowMenu();
 
-                // this.setDisplayprop();
+                  this.setDisplayprop();
                 
                 
                  
@@ -869,20 +890,22 @@ class App extends Component {
                 console.log(event),
                 this.toggleShowMenu();
                 // this.Resetalldisplaydata();
-                 this.setHideprop();
+
+                  this.setHideprop();
                 
 
               }).bind(this),
-              selectEdge : (function(event){
-                this.setDisplayprop();
+              // selectEdge : (function(event){
+              //   this.setDisplayprop();
                 
             
-              }).bind(this),
-              deselectEdge : (function(event){
-                //console.log(event);
-                //console.log("This is popup!!")
+              // }).bind(this),
+              // deselectEdge : (function(event){
+              //   //console.log(event);
+              //   //console.log("This is popup!!")
+              //   this.setHideprop();
             
-              }).bind(this)
+              // }).bind(this)
               }
             } />  
                    
