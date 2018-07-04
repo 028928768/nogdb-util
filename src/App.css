@@ -225,3 +225,7 @@
   border:1px solid black;
   float:clear;
 }
+#alertmsg {
+  width:100%;
+  height:5%;
+}

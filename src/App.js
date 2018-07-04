@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import Graph from 'react-graph-vis'
 import $ from 'jquery'
 import './App.css';
+import {Alert} from 'reactstrap';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col } from 'reactstrap'
 import classnames from 'classnames';
 
@@ -65,7 +66,7 @@ let graphDB = {
     { id: "20", label: 'Herry', group: 'D' }
   ],
   edges: [
-    { from: "1", to: "2" },
+    { from: "1", to: "2" ,label:''},
     { from: "1", to: "4" },
     { from: "1", to: "15" },
     { from: "1", to: "18" },
@@ -105,10 +106,10 @@ let graphDB = {
     { id: "5", label: 'Barry', group: 'A' }
   ],
   edges: [
-    { from: "1", to: "2" },
-    { from: "1", to: "4" },
-    { from: "3", to: "5" },
-    { from: "4", to: "2" }
+    { id: "1", from: "1", to: "2" },
+    { id: "2", from: "1", to: "4" },
+    { id: "3", from: "3", to: "5" },
+    { id: "4", from: "4", to: "2" }
   ]
 };
 
@@ -149,7 +150,7 @@ const options = {
   interaction: {
     hover: true,
     selectable: true,
-    selectConnectedEdges: true
+    selectConnectedEdges: false
   },
   manipulation: {
     enabled: true
@@ -176,14 +177,19 @@ class App extends Component {
       showMenu : false,
       isFullscreen:false,
       nodeID :" ",
+      relationID : " ",
       prevNodeID: " ",
       nodeClass:" ",
       flagisAddtoCanvas:true,
       NodeName : "",
       CreateDate : "",
-      isPropertyDisplay : false,
+      isPropertyDisplay :'nodeFalse',
+      isEdgeproperty :false,
       createEdgeMode: false,
-      group: " "
+      group: " ",
+      isAlertShow:false,
+      NodeinID:"",
+      NodeoutID:""
   
       
     }
@@ -216,10 +222,79 @@ class App extends Component {
     this.resetNodename = this.resetNodename.bind(this);
     this.setDisplayprop = this.setDisplayprop.bind(this);
     this.setHideprop = this.setHideprop.bind(this);
+    this.setDisplayEdge = this.setDisplayEdge.bind(this);
+    this.setHideEdge = this.setHideEdge.bind(this);
     this.toggle = this.toggle.bind(this);
     this.handleNodeID2= this.handleNodeID2.bind(this)
     this.updateNodeName = this.updateNodeName.bind(this)
+    this.handleAlertTrue = this.handleAlertTrue.bind(this)
+    this.handleAlertFalse = this.handleAlertFalse.bind(this)
+    this.getinRelationNode = this.getinRelationNode.bind(this)
+    this.getoutRelationNode = this.getoutRelationNode.bind(this)
+    this.setridDisplayFormat = this.setridDisplayFormat.bind(this)
   }
+
+
+
+  setridDisplayFormat = () => {
+    this.setState(prevState => {
+      let canvasNode = prevState.graph.nodes.slice();
+      let canvasEdge = prevState.graph.edges.slice();
+      for (let ele in canvasNode){
+        if(canvasNode[ele].id === prevState.nodeID){
+          
+          // graphDB.nodes[ele].label = newName
+          const updatedNode = {
+            ...canvasNode[ele],
+            label: "1"
+          };
+          canvasNode[ele] = updatedNode;
+          console.log(canvasNode[ele]);
+          
+        }
+
+      }
+
+      return {
+        graph: {
+          nodes: canvasNode,
+          edges: canvasEdge
+        }
+      };
+    });
+  }
+
+
+  
+
+    getoutRelationNode = () => {
+      for ( let ele in this.state.graph.edges){
+        if(this.state.graph.edges[ele].id === this.state.relationID){
+          this.setState({
+            NodeoutID:this.state.graph.edges[ele].from
+          })
+        }
+      }
+    }
+  
+
+    getinRelationNode = () => {
+      for ( let ele in this.state.graph.edges){
+        if(this.state.graph.edges[ele].id === this.state.relationID){
+          this.setState({
+            nodeinID:this.state.graph.edges[ele].to
+          })
+        }
+      }
+    }
+
+  
+    handlerelationID = (relaID) =>{
+      this.setState({
+        relationID : relaID[0]
+      })
+      console.log(this.state.relationID);
+    }
     toggle = (tab) =>{
       if(this.state.activeTab !== tab){
         this.setState ({
@@ -227,14 +302,34 @@ class App extends Component {
         });
       }
     }
+    handleAlertTrue = () =>{
+      this.setState({
+        isAlertShow:true
+      })
+    }
+    handleAlertFalse = () =>{
+      this.setState({
+        isAlertShow:false
+      })
+    }
     setDisplayprop = () =>{
       this.setState({
-        isPropertyDisplay:true
+        isPropertyDisplay:'nodeTrue'
       })
     }
     setHideprop = () =>{
       this.setState({
-        isPropertyDisplay:false
+        isPropertyDisplay:'nodeFalse'
+      })
+    }
+    setDisplayEdge = () =>{
+      this.setState({
+        isPropertyDisplay:'edgeTrue'
+      })
+    }
+    setHideEdge = () =>{
+      this.setState({
+        isPropertyDisplay:'edgeFalse'
       })
     }
     handleChange(e){
@@ -289,6 +384,8 @@ class App extends Component {
       this.setNewNodeName(this.state.nodeID, this.state.editnodename);      
       console.log(this.state.graph.nodes)
       this.toggleEditnodeModal();
+      this.handleAlertTrue();
+     
     }
     setFlagtoAddDatabase = () =>{
       this.setState({
@@ -497,7 +594,7 @@ class App extends Component {
 
       }
       getCreateDate = () => {
-        console.log(this.state.graph.nodes.createdate)
+        
         for (let ele in this.state.graph.nodes){
           if(this.state.graph.nodes[ele].id === this.state.nodeID){
             this.setState ({
@@ -625,100 +722,161 @@ class App extends Component {
        
     
   render() {
-    let { value }  = this.state;
-
-    let aElem = <div>111</div>;
-    // if () {
-    //   aElem = <div>222</div>; 
-    // } else if () {
-    //   aElem = <div>333</div>; 
-
-    // } else if () {
-    //   aElem = <div>444</div>; 
-      
-    // }
-
-    let p;
+    let pheader;
     if (this.state.isFullscreen === true){
-      p = null;
+      pheader = null;
     }
     else {
-      p = <p className="App-intro"> NogDB Graph UI </p>;
+      pheader = <p className="App-intro"> NogDB Graph UI </p>;
     }
+
+
+    let tabbars;
+    if (this.state.isPropertyDisplay === 'nodeTrue'){
+      tabbars = 
+                <div className="Left-tab">
+                   <div id="topbar-prop"> Node <button onClick={this.setHideprop}>Hide </button></div>
+
+                    <Nav tabs>
+                         <NavItem>
+                               <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }}>
+                                        Properties
+                                </NavLink>
+                         </NavItem>
+                         <NavItem>
+                               <NavLink className={classnames({ active: this.state.activeTab === '2' })} onClick={() => { this.toggle('2'); }} >
+                                         Settings
+                                </NavLink>
+                         </NavItem>
+                     </Nav>
+                      <TabContent activeTab={this.state.activeTab}>
+                        <TabPane tabId="1">
+                          <Row>
+                            <Col sm="12">
+                              <h4>Tab 1 Contents</h4>
+                              @rid    :  {this.state.nodeID} <br></br>
+                              @class  :  {this.state.nodeClass} <br></br>
+                              CreatedDate : {this.state.CreateDate}     <br></br>
+                              name    :  {this.state.NodeName}  <br></br>
+                            </Col>
+                          </Row>
+                        </TabPane>
+                        <TabPane tabId="2">
+                          <Row>
+                            <Col sm="12">
+                            <h4>Tab 2 Contents </h4>
+                            <p> Display Format </p>
+                            <input type="text" placeholder="display format..." className="Displayformat-text" /> 
+                            <button onClick={this.setridDisplayFormat}> @rid</button>
+                            <button>@class</button>
+                            <button> createdate </button> 
+                            <button> name </button>
+                            <br></br>
+                            <p> Node Size </p>
+                            <p> display node size </p>
+                            <p> Node Color </p>
+                            <select id="select-nodecolor"  > <option value="String">Red </option> 
+                                                      <option value="Integer">Blue </option>
+                                                      <option value="etc">Yellow </option>
+                              </select>
+                            
+                            
+                            </Col>
+                          </Row>
+                        </TabPane>
+                      </TabContent>
+                      
+                  </div>
+    } else if (this.state.isPropertyDisplay === 'nodeFalse'){
+      tabbars = null;
+    } else if (this.state.isPropertyDisplay === 'edgeTrue')
+                {  tabbars = <div className="Left-tab">
+                <div id="topbar-prop"> Relationship <button onClick={this.setHideprop}>Hide </button></div>
+
+                  <Nav tabs>
+                    <NavItem>
+                        <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }}>
+                                Properties
+                        </NavLink>
+                    </NavItem>
+                    <NavItem>
+                          <NavLink className={classnames({ active: this.state.activeTab === '2' })} onClick={() => { this.toggle('2'); }} >
+                                Settings
+                          </NavLink>
+                    </NavItem>
+                </Nav>
+                <TabContent activeTab={this.state.activeTab}>
+                  <TabPane tabId="1">
+                    <Row>
+                      <Col sm="12">
+                        <h4>Tab 1 Edge</h4>
+                        @rid    :  {this.state.relationID} <br></br>
+                        @class  :  relationship <br></br>
+                        in      :   {this.state.nodeinID}   <br></br>
+                        inRelation :     <br></br>
+                        message   :      <br></br>
+                        out     :   {this.state.NodeoutID}   <br></br>  
+                        outRelation :    <br></br>  
+                      </Col>
+                    </Row>
+                  </TabPane>
+                  <TabPane tabId="2">
+                    <Row>
+                      <Col sm="12">
+                      <h4>Tab 2 Edge </h4>
+                      <p> Display Format </p>
+                      <input type="text" placeholder="display format..." className="Displayformat-text" /> 
+                      <button> @rid</button> 
+                      <button>@class</button> 
+                      <button> in </button> 
+                      <button> out </button>
+                      <button> inRelation </button>
+                      <button> outRelation </button>
+                      <button> message </button>
+
+                      <br></br>
+
+                      <p> Relationship Color </p>
+                      <select id="select-relationcolor"  > <option value="String">Red </option> 
+                                                <option value="Integer">Blue </option>
+                                                <option value="etc">Yellow </option>
+                        </select>
+                      
+                      
+                      </Col>
+                    </Row>
+                  </TabPane>
+                </TabContent>
+          </div> 
+         
+        
+        } else if(this.state.isPropertyDisplay === 'edgeFalse') { null}
+
+
+
+
+    let consolebox;
+    if (this.state.isFullscreen === true){
+      consolebox=null;
+    }else {
+      consolebox = <div className="Top-Box" align="center">Limit</div> 
+    }
+    let alertmsg;
+    if (this.state.isAlertShow === true){
+      alertmsg = <Alert color="success" id='alertmsg'>
+      Edit node succesfully .
+       </Alert>
+    } else if(this.state.isAlertShow === false){ alertmsg= null}
 
     return (
        <div className="App">
          <header className="App-header">  
          </header>
-         { p }
-         { aElem }
-         {
-           this.state.isPropertyDisplay === true?  (
-         <div className="Left-tab">
-         <div id="topbar-prop"> Node <button onClick={this.setHideprop}>Hide </button></div>
-
-          <Nav tabs>
-            <NavItem>
-                 <NavLink className={classnames({ active: this.state.activeTab === '1' })} onClick={() => { this.toggle('1'); }}>
-                         Properties
-                 </NavLink>
-            </NavItem>
-            <NavItem>
-                  <NavLink className={classnames({ active: this.state.activeTab === '2' })} onClick={() => { this.toggle('2'); }} >
-                        Settings
-                  </NavLink>
-             </NavItem>
-        </Nav>
-        <TabContent activeTab={this.state.activeTab}>
-          <TabPane tabId="1">
-            <Row>
-              <Col sm="12">
-                <h4>Tab 1 Contents</h4>
-                 @rid    :  {this.state.nodeID} <br></br>
-                 @class  :  {this.state.nodeClass} <br></br>
-                 CreatedDate : {this.state.CreateDate}     <br></br>
-                 name    :  {this.state.NodeName}  <br></br>
-              </Col>
-            </Row>
-          </TabPane>
-          <TabPane tabId="2">
-            <Row>
-              <Col sm="12">
-               <h4>Tab 2 Contents </h4>
-               <p> Display Format </p>
-               <input type="text" placeholder="display format..." className="Displayformat-text" /> 
-               <button> @rid</button> <button>@class</button> <button> createdate </button> <button> name </button>
-               <br></br>
-               <p> Node Size </p>
-               <p> display node size </p>
-               <p> Node Color </p>
-               <select id="select-nodecolor"  > <option value="String">Red </option> 
-                                         <option value="Integer">Blue </option>
-                                         <option value="etc">Yellow </option>
-                 </select>
-               
-               
-              </Col>
-            </Row>
-          </TabPane>
-        </TabContent>
+         { pheader }
+         {alertmsg}
+         { tabbars }
+         { consolebox }
          
-         </div>
-           ) :  (
-             null
-           )
-         
-         }
-
-
-
-         {
-           this.state.isFullscreen === true ? (
-             null
-           )  : (
-          <div className="Top-Box" align="center">Limit</div>  
-           )
-         }
          <br></br><br></br>
          {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
            <br/>
@@ -797,6 +955,7 @@ class App extends Component {
            <div id='edit-middle-div'> Classname : {this.state.nodeClass} <br></br>
                <div id='inside-editmid-div'> <br></br>
                    <h5 id='Editnode-classname'>name </h5>
+                   
                    <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleEditNodeName}/>
                    <select id="select-nodetype"  > <option value="String">String </option> 
                                          <option value="Integer">Integer </option>
@@ -852,10 +1011,6 @@ class App extends Component {
             <Graph graph={this.state.graph} options={options} 
             events={{
               select: function(event) {
-                // console.log("Selected nodes:");
-                // console.log(nodes);
-                // console.log("Selected edges:");
-                // console.log(edges);
                 console.log("This is Select")
                 
               },
@@ -875,37 +1030,42 @@ class App extends Component {
                    this.state.createEdgeMode = false;
                    }
                 //this.handleNodeID(event.nodes);
-                this.handleNodeClass();
-                this.getNodeName();
-                this.getCreateDate();
-                this.toggleShowMenu();
-
-                  this.setDisplayprop();
-                
-                
-                 
-                 
+                   this.handleNodeClass();
+                   this.getNodeName();
+                   this.getCreateDate();
+                   this.toggleShowMenu();
+                    this.setDisplayprop();     
+                    console.log(this.state.isPropertyDisplay)    
               }).bind(this),
+
               deselectNode : (function(event){
                 console.log(event),
                 this.toggleShowMenu();
                 // this.Resetalldisplaydata();
-
-                  this.setHideprop();
+                  console.log(this.state.isPropertyDisplay)
+                this.setHideprop();
+                this.setHideEdge();
+                this.handleAlertFalse();
                 
 
               }).bind(this),
-              // selectEdge : (function(event){
-              //   this.setDisplayprop();
-                
+
+              selectEdge : (function(event){
+                this.handlerelationID(event.edges);
+                this.getinRelationNode();
+                this.getoutRelationNode();
+                this.setDisplayEdge();
+                console.log(this.state.isPropertyDisplay)
             
-              // }).bind(this),
-              // deselectEdge : (function(event){
-              //   //console.log(event);
-              //   //console.log("This is popup!!")
-              //   this.setHideprop();
+              }).bind(this),
+              deselectEdge : (function(event){
+                //console.log(event);
+                //console.log("This is popup!!")
+                this.setHideEdge();
+                this.setHideprop();
+                console.log(this.state.isPropertyDisplay)
             
-              // }).bind(this)
+              }).bind(this)
               }
             } />  
                    
