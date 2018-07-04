@@ -265,7 +265,7 @@ class App extends Component {
       let newNode =[{id:this.state.textvalue,label:this.state.textvalue}]
       this.AddNodeToDatabase(newNode)
       this.AddNodeToCanvas(newNode,this.state.graph.edges);
-      this.toggleModal();
+      this.toggleModalAddNode();
     }
     AddNodeToDatabase = (newNode) =>{ 
         
@@ -663,10 +663,10 @@ class App extends Component {
            this.state.isFullscreen === true ? (
              null
            ) : (
-          <div className="Top-Box" align="center">Limit</div>
+          <div className="Top-Box" align="center">Limit</div>  
            )
          }
-         
+         <br></br><br></br>
          {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
            <br/>
            <br></br>
@@ -674,7 +674,7 @@ class App extends Component {
              <Modal isOpen={this.state.isAddNodeActive} contentLabel = "addnode Modal" 
                     onRequestClose={this.state.toggleModal}
                     style = {customStyle} > <div id="Modal-header"> Add new node 
-             <button id="hidemodal-button" onClick={this.toggleModal}>Hide Modal</button>
+             <button id="hidemodal-button" onClick={this.toggleModalAddNode}>Hide Modal</button>
              </div>
              {
                this.state.page === 1 ? (
@@ -691,13 +691,13 @@ class App extends Component {
              {
                this.state.page === 1 ? (
               <div id="modal-bottom-div"> Bottom modal 1 <hr></hr>
-              <button id="modal-cancel-button" onClick={this.toggleModal} >Cancel </button>
+              <button id="modal-cancel-button" onClick={this.toggleModalAddNode} >Cancel </button>
               <button id="modal-next-button" onClick={this.handleNextPage} >Next </button>
              
               </div>
                ) : (
                 <div id="modal-bottom-div"> Bottom modal 2 <hr></hr>
-                <button id="modal-cancel-button" onClick={this.toggleModal}> Cancel </button>
+                <button id="modal-cancel-button" onClick={this.toggleModalAddNode}> Cancel </button>
                 <button id="Addnode-button" onClick={this.handleAddNodebutton} >Add node</button>
                 </div>
 
@@ -716,7 +716,7 @@ class App extends Component {
               <input type="dsc-Edge" placeholder="Dsc-Edge..." className="dsc_Edgetxt" onChange={this.handleDscChange}/>
             </div>
             <div id ="edge-bottom-div">
-            <button id="cancel-edge" onClick={this.toggleModal2}>Cancel </button>
+            <button id="cancel-edge" onClick={this.toggleModalCreateEdge}>Cancel </button>
             <button id="Edge-button" onClick={this.handleCreateEdgebutton}>Create edge2</button>
             </div>
 
