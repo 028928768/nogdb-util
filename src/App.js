@@ -189,7 +189,9 @@ class App extends Component {
       group: " ",
       isAlertShow:false,
       NodeinID:"",
-      NodeoutID:""
+      NodeoutID:"",
+      NodeLabel:" ",
+      showRelationMenu:false
   
       
     }
@@ -232,21 +234,92 @@ class App extends Component {
     this.getinRelationNode = this.getinRelationNode.bind(this)
     this.getoutRelationNode = this.getoutRelationNode.bind(this)
     this.setridDisplayFormat = this.setridDisplayFormat.bind(this)
+    this.saveNodeLabel = this.saveNodeLabel.bind(this)
+    this.toggleRelationMenu = this.toggleRelationMenu.bind(this)
+  }
+
+  toggleRelationMenu = () => {
+    this.setState(prevState => ({
+      showRelationMenu: !prevState.showRelationMenu
+    }))
+  }
+  
+  saveNodeLabel = (NodeLabel) =>{
+    this.setState({
+      NodeLabel: NodeLabel
+    })
+  }
+  
+
+  setclassDisplayFormat = () => {
+    this.setState(prevState => {
+      let canvasNode = prevState.graph.nodes.slice();
+      let canvasEdge = prevState.graph.edges.slice();
+      for (let ele in canvasNode){
+        if(canvasNode[ele].id === prevState.nodeID){
+          this.saveNodeLabel(canvasNode[ele].label);
+          
+          const updatedNode = {
+            ...canvasNode[ele],
+            label: this.state.nodeClass
+          };
+          canvasNode[ele] = updatedNode;
+          console.log(canvasNode[ele]);
+          
+        }
+
+      }
+
+      return {
+        graph: {
+          nodes: canvasNode,
+          edges: canvasEdge
+        }
+      };
+    });
   }
 
 
+  setNameDisplayFormat = () => {
+    this.setState(prevState => {
+      let canvasNode = prevState.graph.nodes.slice();
+      let canvasEdge = prevState.graph.edges.slice();
+      for (let ele in canvasNode){
+        if(canvasNode[ele].id === prevState.nodeID){
+          this.saveNodeLabel(canvasNode[ele].label);
+          
+          const updatedNode = {
+            ...canvasNode[ele],
+            label: this.state.NodeLabel
+          };
+          canvasNode[ele] = updatedNode;
+          console.log(canvasNode[ele]);
+          
+        }
 
+      }
+
+      return {
+        graph: {
+          nodes: canvasNode,
+          edges: canvasEdge
+        }
+      };
+    });
+  }
+
+ 
   setridDisplayFormat = () => {
     this.setState(prevState => {
       let canvasNode = prevState.graph.nodes.slice();
       let canvasEdge = prevState.graph.edges.slice();
       for (let ele in canvasNode){
         if(canvasNode[ele].id === prevState.nodeID){
+          this.saveNodeLabel(canvasNode[ele].label);
           
-          // graphDB.nodes[ele].label = newName
           const updatedNode = {
             ...canvasNode[ele],
-            label: "1"
+            label: canvasNode[ele].id
           };
           canvasNode[ele] = updatedNode;
           console.log(canvasNode[ele]);
@@ -768,9 +841,9 @@ class App extends Component {
                             <p> Display Format </p>
                             <input type="text" placeholder="display format..." className="Displayformat-text" /> 
                             <button onClick={this.setridDisplayFormat}> @rid</button>
-                            <button>@class</button>
+                            <button onClick={this.setclassDisplayFormat}>@class</button>
                             <button> createdate </button> 
-                            <button> name </button>
+                            <button onClick={this.setNameDisplayFormat}> name </button>
                             <br></br>
                             <p> Node Size </p>
                             <p> display node size </p>
@@ -868,6 +941,73 @@ class App extends Component {
        </Alert>
     } else if(this.state.isAlertShow === false){ alertmsg= null}
 
+    let commandbox;
+    if (this.state.showMenu === true){
+      commandbox = <div id="command-div"> 
+      <div id="history-div"> Command Menu : {NodeValue=this.state.nodeID}
+          <button id='Incoming-button' title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
+          {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
+          <button id='Outcoming-button' title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
+          {/* <section> */}
+          <button id='Edit-button' onClick={this.toggleEditnodeModal}> Edit node{this.state.nodeID} </button>
+          <Modal isOpen={this.state.isEditNodeActive} contentLabel='Node Editor'
+          onRequestClose={this.toggleEditnodeModal} style={customCreateEdgeModal}>
+
+          <div id='edit-top-div'> Edit Node : {this.state.nodeID}</div>
+           <div id='edit-middle-div'> Classname : {this.state.nodeClass} <br></br>
+               <div id='inside-editmid-div'> <br></br>
+                   <h5 id='Editnode-classname'>name </h5>
+                   
+                   <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleEditNodeName}/>
+                   <select id="select-nodetype"  > <option value="String">String </option> 
+                                         <option value="Integer">Integer </option>
+                                         <option value="etc">Etc </option>
+                 </select> <br></br>
+                   {/* <h5 id='CreateDate'>CreateDate</h5> */}
+                    <form action="/action_page.php">CreateDate: <input type="date" name="bday"/> <input type="submit"/>
+                    <input type="time" id="myTime" value="22:15:00"/>
+                    <select id="select-nodetype"  > <option value="String">String </option> 
+                                         <option value="Integer">Integer </option>
+                                         <option value="etc">Etc </option>
+                    </select> 
+                    </form>               
+              </div>
+           </div>
+           <div id ="edge-bottom-div">
+           <br></br>
+           <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
+           <button id="Edge-button" onClick={this.updateNodeName} >Save Change</button>
+           </div>
+
+          </Modal>  
+          {/* </section> */}
+          <button id='createRelation-button' title="create relationship" onClick={this.handleCreateRelation}> CreateRelation </button>
+          <button id='removeNode-button' title="remove node from canvas" onClick={this.handleRemoveNode}> Remove </button>
+          <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
+             <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
+             onRequestClose={this.toggleDeletenodeModal} style={customCreateEdgeModal}>
+               <div id="top-deletenode-div" > DeleteNode </div>
+               <div id="middle-deletenode-div" > Deleting node {this.state.nodeID} will permanantly be removed from your Database
+               </div>
+               <div id="bottom-deletenode-div" >
+               <button onClick={this.toggleDeletenodeModal}> No,keep Node</button>
+               <button onClick={this.handleDeleteNode}> Yes,Delete Node! </button>
+                  </div>
+
+             </Modal>
+          
+           </div>
+                    </div>
+    } else if(this.state.showMenu === false) { commandbox = null}
+      else if(this.state.showRelationMenu ===true){ 
+        commandbox = <div id="command-div"> 
+        <button> 1 </button>
+        <button> 2 </button>
+        </div>
+      } else if (this.state.showRelationMenu === false){
+        commandbox = null
+      }
+
     return (
        <div className="App">
          <header className="App-header">  
@@ -878,7 +1018,7 @@ class App extends Component {
          { consolebox }
          
          <br></br><br></br>
-         {/* <p className="Display-msg">Displaying { Nodenumber = this.graph.nodes.length} nodes, {Relationnumber = this.graph.edges.length} relationships. </p> */}
+         {/* <p className="Display-msg">Displaying { Nodenumber = this.state.graph.nodes.length} nodes, {Relationnumber = this.state.graph.edges.length} relationships. </p> */}
            <br/>
            <br></br>
             <button id ="Addnode-modal" onClick={this.toggleModalAddNode}>Add node </button>
@@ -940,74 +1080,11 @@ class App extends Component {
             ) : 
             
             (
-          <div className="Canvas" align="center"> <div id="command-div">{
-            this.state.showMenu === true ? (
-          <div id="history-div"> Command Menu {NodeValue=this.state.nodeID}
-          <button id='Incoming-button' title="Incoming Relationship" onClick={this.handleIncoming}> Incoming </button>
-          {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
-          <button id='Outcoming-button' title="Outcoming Relationship" onClick={this.handleOutcoming}> Outcoming </button>
-          {/* <section> */}
-          <button id='Edit-button' onClick={this.toggleEditnodeModal}> Edit node{this.state.nodeID} </button>
-          <Modal isOpen={this.state.isEditNodeActive} contentLabel='Node Editor'
-          onRequestClose={this.toggleEditnodeModal} style={customCreateEdgeModal}>
-
-          <div id='edit-top-div'> Edit Node : {this.state.nodeID}</div>
-           <div id='edit-middle-div'> Classname : {this.state.nodeClass} <br></br>
-               <div id='inside-editmid-div'> <br></br>
-                   <h5 id='Editnode-classname'>name </h5>
-                   
-                   <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleEditNodeName}/>
-                   <select id="select-nodetype"  > <option value="String">String </option> 
-                                         <option value="Integer">Integer </option>
-                                         <option value="etc">Etc </option>
-                 </select> <br></br>
-                   {/* <h5 id='CreateDate'>CreateDate</h5> */}
-                    <form action="/action_page.php">CreateDate: <input type="date" name="bday"/> <input type="submit"/>
-                    <input type="time" id="myTime" value="22:15:00"/>
-                    <select id="select-nodetype"  > <option value="String">String </option> 
-                                         <option value="Integer">Integer </option>
-                                         <option value="etc">Etc </option>
-                    </select> 
-                    </form>               
-              </div>
-           </div>
-           <div id ="edge-bottom-div">
-           <br></br>
-           <button id="cancel-edge" onClick={this.toggleEditnodeModal}>Cancel </button>
-           <button id="Edge-button" onClick={this.updateNodeName} >Save Change</button>
-           </div>
-
-          </Modal>  
-          {/* </section> */}
-          <button id='createRelation-button' title="create relationship" onClick={this.handleCreateRelation}> CreateRelation </button>
-          <button id='removeNode-button' title="remove node from canvas" onClick={this.handleRemoveNode}> Remove </button>
-          <button id='deleteNode-button'title="delete node from Database" onClick={this.toggleDeletenodeModal} > Delete </button>
-             <Modal isOpen={this.state.isDeleteNodeActivate} contentLabel="DeleteNodeModal"
-             onRequestClose={this.toggleDeletenodeModal} style={customCreateEdgeModal}>
-               <div id="top-deletenode-div" > DeleteNode </div>
-               <div id="middle-deletenode-div" > Deleting node {this.state.nodeID} will permanantly be removed from your Database
-               </div>
-               <div id="bottom-deletenode-div" >
-               <button onClick={this.toggleDeletenodeModal}> No,keep Node</button>
-               <button onClick={this.handleDeleteNode}> Yes,Delete Node! </button>
-                  </div>
-
-             </Modal>
+          <div className="Canvas" align="center"> 
+          {commandbox}
+          {/* {relationbox} */}
           
-           </div>
-            
-            ) : (
-              <div>
-       
-
-        
-      </div>
-          
-            )
-           } 
            
-           
-            </div>
             <Graph graph={this.state.graph} options={options} 
             events={{
               select: function(event) {
@@ -1054,6 +1131,7 @@ class App extends Component {
                 this.handlerelationID(event.edges);
                 this.getinRelationNode();
                 this.getoutRelationNode();
+                this.toggleRelationMenu();
                 this.setDisplayEdge();
                 console.log(this.state.isPropertyDisplay)
             
