@@ -20,6 +20,19 @@ import classnames from 'classnames';
      marginBottom : '15%' 
    }
  } ;
+ const customEditRStyle = { 
+  content : {
+    posittion:'absolute',
+    top    : '20px',
+    left   : '40px',
+    right  : '40px',
+    bottom : '40px',
+    marginRight  : '15%',
+    marginLeft   : '15%',
+    marginTop    : '10%',
+    marginBottom : '10%' 
+  }
+} ;
  const customCreateEdgeModal = {
     content : {
       position:'absolute',
@@ -177,6 +190,7 @@ class App extends Component {
       isDeleteNodeActivate:false,
       isDeleteRelationActivate:false,
       isCreateRelationActive:false,
+      isEditRelationActive:false,
       page: 1,
       showMenu : false,
       isFullscreen:false,
@@ -623,6 +637,11 @@ class App extends Component {
       toggleDeletenodeModal = () => {
         this.setState({
           isDeleteNodeActivate:!this.state.isDeleteNodeActivate
+        })
+      }
+      toggleEditRelationModal = () => {
+        this.setState({
+          isEditRelationActive:!this.state.isEditRelationActive
         })
       }
       toggleDeleteRelationModal = () =>{
@@ -1107,7 +1126,28 @@ class App extends Component {
        if(this.state.showRelationMenu ===true){ 
         relationbox = <div id="relationMenu-div"> 
           Relationship Menu : {this.state.relationID}
-        <button> Edit Relationship </button>
+
+        <button onClick={this.toggleEditRelationModal}> Edit Relationship </button>
+        <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
+                    onRequestClose={this.toggleEditRelationModal}
+                    style = {customEditRStyle} > <div id="editRModal-header">  Edit Relashion 
+             <button id="hidemodal-button" onClick={this.toggleModalAddNode}>Hide Modal</button>
+             <hr></hr>
+             </div>
+            
+                <div id="editRmodal-middle-div"> relation <hr></hr>
+                   <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                </div>
+             
+                <div id="editRmodal-bottom-div"> Bottom <hr></hr>
+                <button id="modal-cancel-button" onClick={this.toggleModalAddNode}> Cancel </button>
+                <button id="Addnode-button" onClick={this.handleAddNodebutton} >Save Change</button>
+                </div>
+
+               
+             </Modal>
+
+
         <button onClick={this.toggleDeleteRelationModal}> Delete Relationship </button>
         <Modal isOpen={this.state.isDeleteRelationActivate} contentLabel="DeleteRelationModal"
              onRequestClose={this.toggleDeleteRelationModal} style={customCreateEdgeModal}>
