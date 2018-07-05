@@ -92,9 +92,17 @@
 
 
 }
+#inside-box{
+  border:1px solid black;
+}
 #command-div {
   width:100%;
-  height:20%;
+  height:10%;
+}
+#relationMenu-div {
+  width:100%;
+  height:10%;
+  border:1px solid black;
 }
 .CanvasFullScreen {
   test-align:center;
