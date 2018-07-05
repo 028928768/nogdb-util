@@ -1130,17 +1130,24 @@ class App extends Component {
         <button onClick={this.toggleEditRelationModal}> Edit Relationship </button>
         <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
                     onRequestClose={this.toggleEditRelationModal}
-                    style = {customEditRStyle} > <div id="editRModal-header">  Edit Relashion 
-             <button id="hidemodal-button" onClick={this.toggleModalAddNode}>Hide Modal</button>
+                    style = {customEditRStyle} > <div id="editRModal-header">  Edit Relationship
+             <button id="hidemodal-button" onClick={this.toggleEditRelationModal}>Hide Modal</button>
              <hr></hr>
              </div>
             
                 <div id="editRmodal-middle-div"> relation <hr></hr>
-                   <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                  <div id="ineditRmodal-middle-div">
+                   inRelation <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                       <select id="select-id"  > {this.selectBoxList()} </select> <br></br><br></br>
+                     message   <input type="text" placeholder="Type message here...." className="msgTxt"  /> 
+                       <select id="select-id"  > {this.selectBoxList()} </select>        <br></br><br></br>
+                   outRelation  <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                       <select id="select-id"  > {this.selectBoxList()} </select>
+                   </div>
                 </div>
-             
-                <div id="editRmodal-bottom-div"> Bottom <hr></hr>
-                <button id="modal-cancel-button" onClick={this.toggleModalAddNode}> Cancel </button>
+                <br></br>
+                <div id="editRmodal-bottom-div">  
+                <button id="modal-cancel-button" onClick={this.toggleEditRelationModal}> Cancel </button>
                 <button id="Addnode-button" onClick={this.handleAddNodebutton} >Save Change</button>
                 </div>
 

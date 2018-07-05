@@ -134,6 +134,25 @@
   top:-10%;
   border:1px solid black;
 }
+#ineditRmodal-middle-div {
+  height:80%;
+  top:-10%;
+  border:1px solid black;
+}
+.msgTxt {
+  width:70%;
+  height:30%;
+}
+#editRmodal-bottom-div{
+  height:20%;
+  top:-30%;
+}
+#editRmodal-middle-div{
+  position:relative;
+  height:70%;
+  
+  border:1px solid black;
+}
 #modal-bottom-div{
   position:relative;
   height:35%;
