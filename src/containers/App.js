@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Modal from "react-modal";
-import Graph from "react-graph-vis";
 import $ from "jquery";
 import "./App.css";
 import { Alert } from "reactstrap";
@@ -11,19 +10,8 @@ import Console from '../components/console';
 import Canvas from '../components/canvas';
 import History from '../components/history';
 import { connect} from 'react-redux';
+import {addnode} from '../actions/addnodeAction'
 import NodePropertyMenu from '../components/menu';
-
-
-  const mapStateToProps = state => {
-    return {
-      graph:state.graph
-    }
-  }
-
-  const mapDispatchToProps = dispatch => {
-    return {
-    }
-  }
 
 const customStyle = {
   content: {
@@ -77,75 +65,21 @@ const customCreateEdgeModal = {
     marginBottom: "15%"
   }
 };
-// let Nodenumber;
-// let Relationnumber;
-// let NodeValue;
 
-//  let classListEdge = {
-//    groups : {
-//      AAA:{color:"Crimson"},
-//      BBB:{color:"Navy"},
-//      CCC:{color:"Magenta"},
-//      DDD:{color:"YellowGreen"}
+  const mapStateToProps = state => {
+    return {
+      graph:state.graph
+    }
+  }
 
-//    }
-//  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      onAddnode: newNode => {
+        dispatch (addnode(newNode))
+      }
+    }
+  }
 
-// let graphDB = {
-//   nodes: [
-//     { id: "1", label: "Bill", group: "A" },
-//     { id: "2", label: "Queen", group: "A" },
-//     { id: "3", label: "King", group: "A" },
-//     { id: "4", label: "Jack", group: "A" },
-//     { id: "5", label: "Barry", group: "A" },
-//     { id: "6", label: "Jane", group: "B" },
-//     { id: "7", label: "John", group: "B" },
-//     { id: "8", label: "Alex", group: "B" },
-//     { id: "9", label: "Bob", group: "B" },
-//     { id: "10", label: "Car", group: "B" },
-//     { id: "11", label: "Death", group: "C" },
-//     { id: "12", label: "Elf", group: "C" },
-//     { id: "13", label: "Frank", group: "C" },
-//     { id: "14", label: "Oliver", group: "C" },
-//     { id: "15", label: "Ryu", group: "C" },
-//     { id: "16", label: "Max", group: "D" },
-//     { id: "17", label: "Leon", group: "D" },
-//     { id: "18", label: "Chris", group: "D" },
-//     { id: "19", label: "Jill", group: "D" },
-//     { id: "20", label: "Herry", group: "D" }
-//   ],
-//   edges: [
-//     { id: "1", from: "1", to: "2", label: "AAA", color: { color: "Crimson" } },
-//     { from: "1", to: "4", label: "CCC", color: { color: "Magenta" } },
-//     { from: "1", to: "15", label: "BBB", color: { color: "Navy" } },
-//     { from: "1", to: "18", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "2", to: "7", label: "AAA", color: { color: "Crimson" } },
-//     { from: "2", to: "14", label: "CCC", color: { color: "Magenta" } },
-//     { from: "2", to: "19", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "3", to: "5", label: "BBB", color: { color: "Navy" } },
-//     { from: "4", to: "2", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "6", to: "10", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "6", to: "11", label: "CCC", color: { color: "Magenta" } },
-//     { from: "7", to: "8", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "7", to: "19", label: "AAA", color: { color: "Crimson" } },
-//     { from: "8", to: "2", label: "CCC", color: { color: "Magenta" } },
-//     { from: "8", to: "6", label: "BBB", color: { color: "Navy" } },
-//     { from: "9", to: "17", label: "CCC", color: { color: "Magenta" } },
-//     { from: "10", to: "1", label: "CCC", color: { color: "Magenta" } },
-//     { from: "10", to: "8", label: "BBB", color: { color: "Navy" } },
-//     { from: "12", to: "5", label: "BBB", color: { color: "Navy" } },
-//     { from: "12", to: "11", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "12", to: "15", label: "AAA", color: { color: "Crimson" } },
-//     { from: "13", to: "17", label: "BBB", color: { color: "Navy" } },
-//     { from: "14", to: "20", label: "CCC", color: { color: "Magenta" } },
-//     { from: "16", to: "3", label: "CCC", color: { color: "Magenta" } },
-//     { from: "16", to: "7", label: "BBB", color: { color: "Navy" } },
-//     { from: "17", to: "19", label: "CCC", color: { color: "Magenta" } },
-//     { from: "18", to: "20", label: "AAA", color: { color: "Crimson" } },
-//     { from: "19", to: "4", label: "DDD", color: { color: "YellowGreen" } },
-//     { from: "20", to: "1", label: "CCC", color: { color: "Magenta" } }
-//   ]
-// };
 
 
 class App extends Component {
@@ -186,10 +120,10 @@ class App extends Component {
     };
     this.handleAddNodebutton = this.handleAddNodebutton.bind(this);
     this.handleNextPage = this.handleNextPage.bind(this);
-    // this.handleChange = this.handleChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     // this.handleSrcChange = this.handleSrcChange.bind(this);
     // this.handleDscChange = this.handleDscChange.bind(this);
-    // this.handleEditNodeName = this.handleEditNodeName.bind(this);
+    this.handleEditNodeName = this.handleEditNodeName.bind(this);
     // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
     // this.handleClearCanvas = this.handleClearCanvas.bind(this);
     // this.toggleShowMenu = this.toggleShowMenu.bind(this);
@@ -238,15 +172,18 @@ class App extends Component {
    
   }
   handleAddNodebutton() {
-    let newNode = [
+    let newNode = 
       {
         id: this.state.textvalue,
         label: this.state.textvalue,
-        group: this.state.group.value
+        group: this.state.group
       }
-    ];
-    this.AddNodeToDatabase(newNode);
-    this.AddNodeToCanvas(newNode, this.state.graph.edges);
+    ;
+
+    this.props.onAddnode(newNode)
+      
+    // this.AddNodeToDatabase(newNode);
+    // this.AddNodeToCanvas(newNode, this.state.graph.edges);
     this.toggleModalAddNode();
   }
   toggleModalAddNode = () => {
@@ -256,30 +193,40 @@ class App extends Component {
     });
   };
   handleNextPage = () => {
-    // let g = document.getElementById("select-id");
-    // let selectGroup;
+    let g = document.getElementById("select-id");
+    let selectGroup;
 
-    // for (let i =0; i<g.options.lenght;i++){
-    //   if (g.option[i].selected ===true){
-    //     selectGroup = g.options[i];
-    //     break;
-    //   }
-    // }
+    for (let i =0; i<g.options.lenght;i++){
+      if (g.option[i].selected ===true){
+        selectGroup = g.options[i].value;
+        break;
+      }
+    }
     this.setState({
       page:2,
-      // group:selectGroup
+       group:selectGroup
     });
   }
   selectBoxList=(graph)=>{
     let arr =[]
-    const list =Object.keys(graph.groups)
+    const list =Object.keys(graph.options.groups)
     for(let ele in list){
       arr.push(<option key={ele} value ={list[ele]}>{list[ele]}</option>)
     }
     return arr
   }
+  handleChange(e){
+    this.setState({
+      textvalue:e.target.value
+    })
+  }
+  handleEditNodeName(e) {
+        this.setState({
+          editnodename: e.target.value
+        });
+      }
   render() {
-    const {graph} = this.props;
+    const {graph,AddnodeDispatch} = this.props;
     return(
       <div id='test-div'>
       <NogDBTitle/>
@@ -303,7 +250,7 @@ class App extends Component {
           {this.state.page === 1 ? (
             <div id="addnodemodal-middle-div">  
               Hello middle 1 <hr />
-              {/* Class :  <select id="select-id"> {this.selectBoxList} </select> */}
+              Class :  <select id="select-id"> {this.selectBoxList(graph)} </select>
             </div>
           ) : (
             <div id="addnodemodal-middle-div">
@@ -311,7 +258,7 @@ class App extends Component {
               <div id="edit-middle-div"> Group : {this.state.nodeClass} <br /><br></br>
                 <div id="inside-editmid-div"><br/>
                   <h5 id="Editnode-classname">name </h5>
-                  <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleEditNodeName}/>
+                  <input type="node-edit" placeholder="Edit...." className="Node-editor" onChange={this.handleChange}/>
                   <select id="select-nodetype">
                     <option value="String">String </option>
                     <option value="Integer">Integer </option>
@@ -396,10 +343,12 @@ class App extends Component {
         </button>
 
 
-
+          
       <Canvas
         state = {graph}
+    
       />
+     
       <History/>
       </div>
     );
@@ -721,11 +670,7 @@ export default connect(
 //       isPropertyDisplay: "edgeFalse"
 //     });
 //   };
-//   handleChange(e) {
-//     this.setState({
-//       textvalue: e.target.value
-//     });
-//   }
+      
 //   handleSrcChange(e) {
 //     this.setState({
 //       srcvalue: e.target.value
@@ -736,11 +681,7 @@ export default connect(
 //       dscvalue: e.target.value
 //     });
 //   }
-//   handleEditNodeName(e) {
-//     this.setState({
-//       editnodename: e.target.value
-//     });
-//   }
+  
 //   setNewNodeName = (nodeID, newName) => {
 //     this.setState(prevState => {
 //       let canvasNode = prevState.graph.nodes.slice();
@@ -1709,3 +1650,79 @@ export default connect(
 // }
 
 // export default App;
+
+
+
+
+
+
+
+// let Nodenumber;
+// let Relationnumber;
+// let NodeValue;
+
+//  let classListEdge = {
+//    groups : {
+//      AAA:{color:"Crimson"},
+//      BBB:{color:"Navy"},
+//      CCC:{color:"Magenta"},
+//      DDD:{color:"YellowGreen"}
+
+//    }
+//  }
+
+// let graphDB = {
+//   nodes: [
+//     { id: "1", label: "Bill", group: "A" },
+//     { id: "2", label: "Queen", group: "A" },
+//     { id: "3", label: "King", group: "A" },
+//     { id: "4", label: "Jack", group: "A" },
+//     { id: "5", label: "Barry", group: "A" },
+//     { id: "6", label: "Jane", group: "B" },
+//     { id: "7", label: "John", group: "B" },
+//     { id: "8", label: "Alex", group: "B" },
+//     { id: "9", label: "Bob", group: "B" },
+//     { id: "10", label: "Car", group: "B" },
+//     { id: "11", label: "Death", group: "C" },
+//     { id: "12", label: "Elf", group: "C" },
+//     { id: "13", label: "Frank", group: "C" },
+//     { id: "14", label: "Oliver", group: "C" },
+//     { id: "15", label: "Ryu", group: "C" },
+//     { id: "16", label: "Max", group: "D" },
+//     { id: "17", label: "Leon", group: "D" },
+//     { id: "18", label: "Chris", group: "D" },
+//     { id: "19", label: "Jill", group: "D" },
+//     { id: "20", label: "Herry", group: "D" }
+//   ],
+//   edges: [
+//     { id: "1", from: "1", to: "2", label: "AAA", color: { color: "Crimson" } },
+//     { from: "1", to: "4", label: "CCC", color: { color: "Magenta" } },
+//     { from: "1", to: "15", label: "BBB", color: { color: "Navy" } },
+//     { from: "1", to: "18", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "2", to: "7", label: "AAA", color: { color: "Crimson" } },
+//     { from: "2", to: "14", label: "CCC", color: { color: "Magenta" } },
+//     { from: "2", to: "19", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "3", to: "5", label: "BBB", color: { color: "Navy" } },
+//     { from: "4", to: "2", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "6", to: "10", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "6", to: "11", label: "CCC", color: { color: "Magenta" } },
+//     { from: "7", to: "8", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "7", to: "19", label: "AAA", color: { color: "Crimson" } },
+//     { from: "8", to: "2", label: "CCC", color: { color: "Magenta" } },
+//     { from: "8", to: "6", label: "BBB", color: { color: "Navy" } },
+//     { from: "9", to: "17", label: "CCC", color: { color: "Magenta" } },
+//     { from: "10", to: "1", label: "CCC", color: { color: "Magenta" } },
+//     { from: "10", to: "8", label: "BBB", color: { color: "Navy" } },
+//     { from: "12", to: "5", label: "BBB", color: { color: "Navy" } },
+//     { from: "12", to: "11", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "12", to: "15", label: "AAA", color: { color: "Crimson" } },
+//     { from: "13", to: "17", label: "BBB", color: { color: "Navy" } },
+//     { from: "14", to: "20", label: "CCC", color: { color: "Magenta" } },
+//     { from: "16", to: "3", label: "CCC", color: { color: "Magenta" } },
+//     { from: "16", to: "7", label: "BBB", color: { color: "Navy" } },
+//     { from: "17", to: "19", label: "CCC", color: { color: "Magenta" } },
+//     { from: "18", to: "20", label: "AAA", color: { color: "Crimson" } },
+//     { from: "19", to: "4", label: "DDD", color: { color: "YellowGreen" } },
+//     { from: "20", to: "1", label: "CCC", color: { color: "Magenta" } }
+//   ]
+// };

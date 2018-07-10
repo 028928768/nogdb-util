@@ -63,13 +63,26 @@ const GraphSetting = {
 
   const graphCanvasReducer = (state = GraphSetting,action) =>{
       switch(action.type){
+          case 'ADDNODEACTION':
+          const newGraphCanvas = Object.assign({}, state.graphCanvas);
+          newGraphCanvas.nodes.push(action.payload);
+          // console.log(newGraphCanvas);
+         return  {
+            ...state,
+            graphCanvas: newGraphCanvas
+    
+          }
+          break;
+          
           default:
             state = {
               ...state
             }
+            return state;
             break;
-      }
-      return state;
+       }
+           
   }
   export default graphCanvasReducer;
+  
   
