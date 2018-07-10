@@ -14,14 +14,7 @@ class Canvas extends Component {
                    <Graph
               graph={state.graphCanvas} 
               options={state.options}
-              events={{
-                afterDrawing: function(event) {
-                      console.log("This is Select");
-                    },
-                    initRedraw: function(event){
-                      console.log("initredraw")
-                    }
-                  }}
+
               />
             
             </div>

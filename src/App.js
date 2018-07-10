@@ -1,4 +1,3 @@
-
 const newNode = {
     id :null,
     label:null,
@@ -30,3 +29,5 @@ const AddnodeReducer = (state = newNode, action) => {
   
   export default AddnodeReducer 
   
+
+  actionReducer;

@@ -64,15 +64,31 @@ const GraphSetting = {
   const graphCanvasReducer = (state = GraphSetting,action) =>{
       switch(action.type){
           case 'ADDNODEACTION':
-          const newGraphCanvas = Object.assign({}, state.graphCanvas);
-          newGraphCanvas.nodes.push(action.payload);
+          
+          const newGraphCanvas = state.graphCanvas.nodes.slice()
+          //const newGraphCanvas = Object.assign({}, state.graphCanvas.nodes);
+          console.log(newGraphCanvas)
+          const newGraphEdge = state.graphCanvas.edges.slice()
+          //const newGraphEdge = Object.assign({},state.graphCanvas.edges);
+          newGraphCanvas.push(action.payload);
           // console.log(newGraphCanvas);
          return  {
             ...state,
-            graphCanvas: newGraphCanvas
-    
+            graphCanvas: {
+              nodes:newGraphCanvas,
+              edges:newGraphEdge
+            }
           }
           break;
+
+          case 'CLEARCANVAS':
+          return  {
+            ...state,
+            graphCanvas: {
+              nodes:action.payload.nodes,
+              edges:action.payload.edges
+            }
+          }
           
           default:
             state = {
