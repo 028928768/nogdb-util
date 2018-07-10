@@ -260,12 +260,24 @@ class App extends Component {
     } else {
        pheader = <NogDBTitle/>
     }
+    let consolebox;
+    if (scale.isFullscreen === true) {
+      consolebox = null;
+    } else {
+      consolebox = <Console/>
+    }
+    let historybox;
+    if (scale.isFullscreen === true){
+      historybox = null;
+    } else {
+      historybox = <History/>
+    }
    
     return(
       <div id='test-div'>
       {pheader}
-      <Console/>
       {/* <NodePropertyMenu/> */}
+      {consolebox}
 
 
 
@@ -333,10 +345,16 @@ class App extends Component {
             </div>
           )}
         </Modal>
-   
+        { scale.isFullscreen === false ? (
         <button id="FullScreen-button" onClick={this.props.onSetFullSceen}>
           Full screen
         </button>
+        ) : (
+          <button id="FullScreen-button" onClick={this.props.onExitFullScreen}>
+          Exit Fullscreen
+        </button>
+        )
+        }
         <button id="Clear-Canvas" onClick={this.handleClearCanvas}>
          Clear Canvas
         </button>
@@ -347,8 +365,8 @@ class App extends Component {
         state = {graph}
     
       />
-     
-      <History/>
+   
+      {historybox}
       </div>
     );
   }
@@ -841,12 +859,12 @@ export default connect(
 
 
   
-//   handleNodeID(nodeIDs) {
-//     this.setState({
-//       nodeID: nodeIDs[0]
-//     });
-//     console.log(this.state.nodeID);
-//   }
+  // handleNodeID(nodeIDs) {
+  //   this.setState({
+  //     nodeID: nodeIDs[0]
+  //   });
+  //   console.log(this.state.nodeID);
+  // }
 //   handleNodeID2 = nodeIDs => {
 //     this.setState(prevState => ({
 //       nodeID: nodeIDs[0],
@@ -1289,16 +1307,7 @@ export default connect(
 //       null;
 //     }
 
-//     let consolebox;
-//     if (this.state.isFullscreen === true) {
-//       consolebox = null;
-//     } else {
-//       consolebox = (
-//         <div className="Top-Box" align="center">
-//           Limit
-//         </div>
-//       );
-//     }
+
 //     let alertmsg;
 //     if (this.state.isAlertShow === true) {
 //       alertmsg = (
@@ -1565,32 +1574,29 @@ export default connect(
             //   graph={this.state.graph}
             //   options={this.state.options}
             //   events={{
-            //     select: function(event) {
-            //       console.log("This is Select");
-            //     },
-            //     selectNode: function(event) {
-            //       if (this.state.createEdgeMode === false) {
-            //         this.handleNodeID(event.nodes);
-            //       } else {
-            //         this.handleNodeID2(event.nodes);
-            //       }
-            //       if (this.state.createEdgeMode === true) {
-            //         const src = this.state.prevNodeID.toString();
-            //         const dest = this.state.nodeID.toString();
-            //         this.setSrcEdge(src);
-            //         this.setDecEdge(dest);
-            //         this.toggleCreateRelationModalTrue();
-            //         this.state.createEdgeMode = false;
-            //       }
+                // selectNode: function(event) {
+                //   if (this.state.createEdgeMode === false) {
+                //     this.handleNodeID(event.nodes);
+                //   } else {
+                //     this.handleNodeID2(event.nodes);
+                //   }
+                //   if (this.state.createEdgeMode === true) {
+                //     const src = this.state.prevNodeID.toString();
+                //     const dest = this.state.nodeID.toString();
+                //     this.setSrcEdge(src);
+                //     this.setDecEdge(dest);
+                //     this.toggleCreateRelationModalTrue();
+                //     this.state.createEdgeMode = false;
+                //   }
 
-            //       //this.handleNodeID(event.nodes);
-            //       this.handleNodeClass();
-            //       this.getNodeName();
-            //       // this.getCreateDate();
-            //       this.toggleShowMenu();
-            //       this.setDisplayprop();
-            //       console.log(this.state.isPropertyDisplay);
-            //     }.bind(this),
+                //   //this.handleNodeID(event.nodes);
+                //   this.handleNodeClass();
+                //   this.getNodeName();
+                //   // this.getCreateDate();
+                //   this.toggleShowMenu();
+                //   this.setDisplayprop();
+                //   console.log(this.state.isPropertyDisplay);
+                // }.bind(this),
 
             //     deselectNode: function(event) {
             //       console.log(event), this.toggleShowMenu();

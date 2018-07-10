@@ -1,5 +1,7 @@
 const ComponentScale = {
-    isFullscreen : false
+    isFullscreen : false,
+    NodeMenu : false,
+    EdgeMenu : false
 }
 
 const rescaleReducer = (state = ComponentScale,action) => {
@@ -15,6 +17,21 @@ const rescaleReducer = (state = ComponentScale,action) => {
         return  {
               ...state,
               isFullscreen:false
+            }
+            break;
+///////////////////////////////////////////////////////////////////////
+
+        case 'SHOWNODEMENU':
+        return  {
+              ...state,
+              NodeMenu:true
+            }
+            break;
+        
+        case 'HIDENODEMENU':
+        return  {
+              ...state,
+              NodeMenu:false
             }
             break;
 
