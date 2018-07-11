@@ -52,12 +52,12 @@ class NodePropertyMenu extends Component {
     }
   };
     render () {
-       
+      const {graph,scale,data} = this.props;
 
         return (
             <div className="Left-tab">
           <div id="topbar-prop">
-           Node <button onClick={this.setHideprop}>Hide </button>
+           Node <button onClick={this.props.HideNodeMenu}>Hide </button>
          </div>
 
          <Nav tabs>
@@ -87,10 +87,10 @@ class NodePropertyMenu extends Component {
               <Row>
                 <Col sm="12">
                  <h4>Tab 1 Contents</h4>
-                  @rid : {this.state.nodeID} <br />
-                  @class : {this.state.nodeClass} <br />
+                  @rid : {data.nodeID} <br />
+                  @class : {data.nodeClass} <br />
                   CreatedDate : {this.state.CreateDate} <br />
-                 name : {this.state.NodeName} <br />
+                 name : {data.nodeName} <br />
                </Col>
                </Row>
            </TabPane>

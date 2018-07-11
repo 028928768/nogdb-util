@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Graph from "react-graph-vis";
 import { connect} from 'react-redux';
-import {getnodeid} from '../actions/dataAction.js';
-import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu} from '../actions/node-edgesmenu';
+import {getnodeid,getnodeclass,getnodename,getedgeid} from '../actions/dataAction.js';
+import {getedgeclass,getinrelation,getoutrelation} from '../actions/dataAction.js';
+import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu,} from '../actions/node-edgesmenu';
 import Modal from "react-modal";
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
+
 
 const mapStateToProps = state => {
     return {
@@ -18,6 +20,24 @@ const mapStateToProps = state => {
     return {
       GetNodeID: NodeID => {
         dispatch (getnodeid(NodeID))
+      },
+      GetEdgeID: EdgeID => {
+        dispatch (getedgeid(EdgeID))
+      },
+      GetNodeClass :NodeClass => {
+        dispatch (getnodeclass(NodeClass))
+      },
+      GetEdgeClass :EdgeClass => {
+        dispatch (getedgeclass(EdgeClass))
+      },
+      GetinRelation :number => {
+        dispatch (getinrelation(number))
+      },
+      GetoutRelation:number => {
+        dispatch (getoutrelation(number))
+      },
+      GetNodeName : NodeName => {
+        dispatch (getnodename(NodeName))
       },
       ShowNodeMenu : () => {
           dispatch(shownodemenu())
@@ -96,14 +116,60 @@ const mapStateToProps = state => {
 class Canvas extends Component {
     constructor(props) {
         super(props);
-        
+        this.state = {
+     
+        }
         this.handleNodeID = this.handleNodeID.bind(this);
+        this.handleGetNodeName = this.handleGetNodeName.bind(this);
+        this.getinRelationNode = this.getinRelationNode.bind(this);
+        this.getoutRelationNode = this.getoutRelationNode.bind(this);
 
 
     }
     handleNodeID(nodeIDs) {
         this.props.GetNodeID(nodeIDs[0])
       }
+    
+    handleGetNodeName = () => {
+        for (let ele in this.props.graph.graphCanvas.nodes) {
+          if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
+    
+            this.props.GetNodeName(this.props.graph.graphCanvas.nodes[ele].label)
+          }
+        }
+      };
+    handleNodeClass = () => {
+        for (let ele in this.props.graph.graphCanvas.nodes) {
+          if (this.props.graph.graphCanvas.nodes[ele].id === this.props.data.nodeID) {
+            // this.setState({
+            //   nodeClass: this.state.graph.nodes[ele].group
+            // });
+            this.props.GetNodeClass(this.props.graph.graphCanvas.nodes[ele].group)
+          }
+        }
+      };  
+
+    handlerelationID = (relaID) => {
+      this.props.GetEdgeID(relaID[0])
+      };
+
+    getinRelationNode = () => {
+        for (let ele in this.props.graph.graphCanvas.edges) {
+          if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
+            this.props.GetinRelation(this.props.graph.graphCanvas.edges[ele].to)
+            
+          }
+        }
+      }; 
+      
+    getoutRelationNode = () => {
+        for (let ele in this.props.graph.graphCanvas.edges) {
+          if (this.props.graph.graphCanvas.edges[ele].id === this.props.data.edgeID) {
+            this.props.GetoutRelation(this.props.graph.graphCanvas.edges[ele].from)
+           
+          }
+        }
+      };
     render () {
          const {state,scale,data} = this.props;
          let commandbox;
@@ -333,7 +399,6 @@ class Canvas extends Component {
             <div className="Canvas" align="center"> 
                 {commandbox}
                 {relationbox}
-                {console.log("NodeID :"+data.nodeID)}
                    <Graph
               graph={state.graphCanvas} 
               options={state.options}
@@ -357,30 +422,24 @@ class Canvas extends Component {
                     this.handleNodeID(event.nodes);
                     this.props.ShowNodeMenu();
                     this.props.HideEdgeMenu();
-                    // this.handleNodeClass();
-                    // this.getNodeName();
+                    this.handleGetNodeName();
+                    this.handleNodeClass();
                     // this.getCreateDate();
-                    // this.toggleShowMenu();
-                    // this.setDisplayprop();
                   }.bind(this),
 
 
                   deselectNode: function(event) {
                     console.log(event), 
                     this.props.HideNodeMenu();
-                    // this.Resetalldisplaydata();
-                    //this.toggleRelationMenu();
-                    // this.setHideEdge();
-                    // this.setHideprop();
                     // this.handleAlertFalse();
                     // this.toggleCreateRAlertmsgFalse();
                   }.bind(this),
 
 
                   selectEdge: function(event) {
-                    // this.handlerelationID(event.edges);
-                    // this.getinRelationNode();
-                    // this.getoutRelationNode();
+                    this.handlerelationID(event.edges);
+                    this.getinRelationNode();
+                    this.getoutRelationNode();
                     this.props.ShowEdgeMenu();
                     this.props.HideNodeMenu();
                     // this.setDisplayEdge();
