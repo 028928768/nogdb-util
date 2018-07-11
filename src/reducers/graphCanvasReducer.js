@@ -89,6 +89,14 @@ const GraphSetting = {
               edges:action.payload.edges
             }
           }
+          case 'UPDATEGRAPH':
+          return  {
+            ...state,
+            graphCanvas: {
+              nodes:action.payload1,
+              edges:action.payload2
+            }
+          }
           
           default:
             state = {

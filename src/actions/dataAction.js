@@ -29,6 +29,12 @@ const getoutrelation =(OutRelation) => ({
     payload:OutRelation
 })
 
+const updategraph = (newNode,newEdge) => ({
+    type: 'UPDATEGRAPH',
+    payload1:newNode,
+    payload2:newEdge
+})
+
 export {
     getnodeid,
     getnodeclass,
@@ -36,5 +42,6 @@ export {
     getedgeid,
     getedgeclass,
     getinrelation,
-    getoutrelation
+    getoutrelation,
+    updategraph
 }

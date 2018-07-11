@@ -123,6 +123,7 @@ class Canvas extends Component {
         this.handleGetNodeName = this.handleGetNodeName.bind(this);
         this.getinRelationNode = this.getinRelationNode.bind(this);
         this.getoutRelationNode = this.getoutRelationNode.bind(this);
+        this.setDisplayFormat = this.setDisplayFormat.bind(this);
 
 
     }
@@ -170,6 +171,38 @@ class Canvas extends Component {
           }
         }
       };
+
+      setDisplayFormat = (dumb) => {
+        this.setState(prevState => {
+          let canvasNode = this.props.graph.graphCanvas.nodes.slice();
+          let canvasEdge = this.props.graph.grapCanvas.edges.slice();
+          let BackupGraph = this.props.graph.graphCanvas.nodes.slice();
+          let backUp;
+          for (let ele in BackupGraph.nodes) {
+            if ( BackupGraph.nodes[ele].id === this.props.data.nodeID) {      
+              backUp = BackupGraph.nodes[ele];
+              break;
+            }
+          }
+          let chosen;
+          for (let ele in canvasNode) {
+            if (this.state.nodeID === canvasNode[ele].id) {
+              chosen = canvasNode[ele];
+    
+              const update = { ...chosen, label: backUp.id };
+              canvasNode[ele] = update;
+              console.log(canvasNode[ele]);
+            }
+          }
+          return {
+            graph: {
+              nodes: canvasNode,
+              edges: canvasEdge
+            }
+          };
+        });
+      };
+
     render () {
          const {state,scale,data} = this.props;
          let commandbox;

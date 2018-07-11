@@ -129,9 +129,6 @@ class App extends Component {
     // this.handleSrcChange = this.handleSrcChange.bind(this);
     // this.handleDscChange = this.handleDscChange.bind(this);
     // this.AddEdgeToCanvas = this.AddEdgeToCanvas.bind(this);
-    // this.toggleShowMenu = this.toggleShowMenu.bind(this);
-    // this.handleNodeID = this.handleNodeID.bind(this);
-    // this.handleNodeClass = this.handleNodeClass.bind(this);
     // this.handleIncoming = this.handleIncoming.bind(this);
     // this.handleOutcoming = this.handleOutcoming.bind(this);
     // this.setToPreviousGraph = this.setToPreviousGraph.bind(this);
