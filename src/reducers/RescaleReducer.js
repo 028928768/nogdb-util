@@ -34,8 +34,20 @@ const rescaleReducer = (state = ComponentScale,action) => {
               NodeMenu:false
             }
             break;
+//////////////////////////////////////////////////////////////////////////
+        case 'SHOWEDGEMENU':
+        return {
+            ...state,
+            EdgeMenu:true
+        }
+        break;
 
-
+        case 'HIDEEDGEMENU':
+        return {
+            ...state,
+            EdgeMenu:false
+        }
+        break;
 
         default:
             state = {

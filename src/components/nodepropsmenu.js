@@ -1,9 +1,56 @@
 import React, { Component } from 'react';
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
 import classnames from "classnames";
+import { connect} from 'react-redux';
+import {getnodeid} from '../actions/dataAction.js';
+import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu} from '../actions/node-edgesmenu';
+
+const mapStateToProps = state => {
+  return {
+    graph:state.graph,
+    scale:state.scale,
+    data:state.data
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    GetNodeID: NodeID => {
+      dispatch (getnodeid(NodeID))
+    },
+    ShowNodeMenu : () => {
+        dispatch(shownodemenu())
+    },
+    HideNodeMenu : () => {
+        dispatch(hidenodemenu())
+    },
+    ShowEdgeMenu : () => {
+      dispatch(showedgemenu())
+    },
+    HideEdgeMenu : () => {
+      dispatch(hideedgemenu())
+    }
+   
+    
+  }
+}
 
 
 class NodePropertyMenu extends Component {
+  constructor(props){
+    super(props);
+    this.state= {
+      
+    };
+    this.toggle = this.toggle.bind(this);
+  }
+  toggle = tab => {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
+  };
     render () {
        
 
@@ -87,4 +134,7 @@ class NodePropertyMenu extends Component {
         )
     }
 }
-export default NodePropertyMenu
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NodePropertyMenu);

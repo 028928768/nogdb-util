@@ -11,7 +11,8 @@ import Canvas from '../components/canvas';
 import History from '../components/history';
 import { connect} from 'react-redux';
 import {addnode,clearcanvas,fullscreen,exitfullscreen} from '../actions/mainButtonAction'
-import NodePropertyMenu from '../components/menu';
+import NodePropertyMenu from '../components/nodepropsmenu';
+import EdgePropertyMenu from '../components/edgepropsmenu';
 
 const customStyle = {
   content: {
@@ -69,7 +70,8 @@ const customCreateEdgeModal = {
   const mapStateToProps = state => {
     return {
       graph:state.graph,
-      scale:state.scale
+      scale:state.scale,
+      data:state.data
     }
   }
 
@@ -253,7 +255,7 @@ class App extends Component {
     }));
   };
   render() {
-    const {graph,scale} = this.props;
+    const {graph,scale,data} = this.props;
     let pheader;
     if (scale.isFullscreen === true) {
       pheader = null;
@@ -272,11 +274,25 @@ class App extends Component {
     } else {
       historybox = <History/>
     }
+    let Nodetabbars;
+    if (scale.NodeMenu === true ){
+      Nodetabbars = <NodePropertyMenu/>
+    } else if (scale.NodeMenu ===false){
+      Nodetabbars = null;
+    }
+    let Edgetabbars;
+    if (scale.EdgeMenu === true){
+      Edgetabbars = <EdgePropertyMenu/>
+    }else if (scale.EdgeMenu === false){
+      Edgetabbars = null;
+    }
+    
    
     return(
       <div id='test-div'>
       {pheader}
       {/* <NodePropertyMenu/> */}
+      {Nodetabbars} {Edgetabbars}
       {consolebox}
 
 
@@ -650,13 +666,7 @@ export default connect(
 //     });
 //     console.log(this.state.relationID);
 //   };
-//   toggle = tab => {
-//     if (this.state.activeTab !== tab) {
-//       this.setState({
-//         activeTab: tab
-//       });
-//     }
-//   };
+  
 //   handleAlertTrue = () => {
 //     this.setState({
 //       isAlertShow: true
@@ -1229,84 +1239,8 @@ export default connect(
 //       tabbars = null;
 //     } else if (this.state.isPropertyDisplay === "edgeTrue") {
 //       tabbars = (
-//         <div className="Left-tab">
-//           <div id="topbar-prop">
-//             Relationship <button onClick={this.setHideprop}>Hide </button>
-//           </div>
-
-//           <Nav tabs>
-//             <NavItem>
-//               <NavLink
-//                 className={classnames({ active: this.state.activeTab === "1" })}
-//                 onClick={() => {
-//                   this.toggle("1");
-//                 }}
-//               >
-//                 Properties
-//               </NavLink>
-//             </NavItem>
-//             <NavItem>
-//               <NavLink
-//                 className={classnames({ active: this.state.activeTab === "2" })}
-//                 onClick={() => {
-//                   this.toggle("2");
-//                 }}
-//               >
-//                 Settings
-//               </NavLink>
-//             </NavItem>
-//           </Nav>
-//           <TabContent activeTab={this.state.activeTab}>
-//             <TabPane tabId="1">
-//               <Row>
-//                 <Col sm="12">
-//                   <h4>Tab 1 Edge</h4>
-//                   @rid : {this.state.relationID} <br />
-//                   @class : relationship <br />
-//                   in : {this.state.nodeinID} <br />
-//                   inRelation : <br />
-//                   message : <br />
-//                   out : {this.state.NodeoutID} <br />
-//                   outRelation : <br />
-//                 </Col>
-//               </Row>
-//             </TabPane>
-//             <TabPane tabId="2">
-//               <Row>
-//                 <Col sm="12">
-//                   <h4>Tab 2 Edge </h4>
-//                   <p> Display Format </p>
-//                   <input
-//                     type="text"
-//                     placeholder="display format..."
-//                     className="Displayformat-text"
-//                   />
-//                   <button onClick={this.setridRelationDisplayFormat}> @rid</button>
-//                   <button onClick={this.setclassRelationDisplayFormat}>@class</button>
-//                   <button onClick={this.setinRelationDisplayFormat}> in </button>
-//                   <button onClick={this.setoutRelationDisplayFormat}> out </button>
-//                   {/* <button onClick={this.setinRelationDisplayFormat}> inRelation </button> */}
-//                   {/* <button onClick={this.setoutRelationDisplayFormat}> outRelation </button> */}
-//                   <button onClick={this.setmessageDisplayFormat}> message </button>
-
-//                   <br />
-
-//                   <p> Relationship Color </p>
-//                   <select id="select-relationcolor">  
-//                     <option value="String">Red </option>
-//                     <option value="Integer">Blue </option>
-//                     <option value="etc">Yellow </option>
-//                   </select>
-//                 </Col>
-//               </Row>
-//             </TabPane>
-//           </TabContent>
-//         </div>
-//       );
-//     } else if (this.state.isPropertyDisplay === "edgeFalse") {
-//       null;
-//     }
-
+        
+     
 
 //     let alertmsg;
 //     if (this.state.isAlertShow === true) {
@@ -1328,222 +1262,10 @@ export default connect(
 //       alertcreateRelationmsg = null;
 //     }
 
-//     let commandbox;
-//     if (this.state.showMenu === true) {
-//       commandbox = (
-//         <div id="command-div">
-//           <div id="history-div">
-//             Command Menu : {(NodeValue = this.state.nodeID)}
-//             <button
-//               id="Incoming-button"
-//               title="Incoming Relationship"
-//               onClick={this.handleIncoming}
-//             >Incoming</button>
-//             {/* <button title="Incoming Relationship" onClick={this.handleIncoming(NodeValue)}> Incoming </button> */}
-//             <button
-//               id="Outcoming-button"
-//               title="Outcoming Relationship"
-//               onClick={this.handleOutcoming}
-//             >Outcoming</button>
-//             <button id="Edit-button" onClick={this.toggleEditnodeModal}>Edit node{this.state.nodeID}</button>
-//             <Modal
-//               isOpen={this.state.isEditNodeActive}
-//               contentLabel="Node Editor"
-//               onRequestClose={this.toggleEditnodeModal}
-//               style={customCreateEdgeModal}
-//             >
-//               <div id="edit-top-div"> Edit Node : {this.state.nodeID}</div>
-//               <div id="edit-middle-div"> Classname : {this.state.nodeClass} <br />
-//                 <div id="inside-editmid-div">
-//                   <br />
-//                   <h5 id="Editnode-classname">name </h5>
-//                   <input
-//                     type="node-edit"
-//                     placeholder="Edit...."
-//                     className="Node-editor"
-//                     onChange={this.handleEditNodeName}
-//                   />
-//                   <select id="select-nodetype">
-//                     <option value="String">String </option>
-//                     <option value="Integer">Integer </option>
-//                     <option value="etc">Etc </option>
-//                   </select>
-//                   <br />
-//                   {/* <h5 id='CreateDate'>CreateDate</h5> */}
-//                   <form action="/action_page.php">
-//                     CreateDate: <input type="date" name="bday" />{" "}
-//                     <input type="submit" />
-//                     <input type="time" id="myTime" value="22:15:00" />
-//                     <select id="select-nodetype">       
-//                       <option value="String">String </option>
-//                       <option value="Integer">Integer </option>
-//                       <option value="etc">Etc </option>
-//                     </select>
-//                   </form>
-//                 </div>
-//               </div>
-//               <div id="edge-bottom-div">
-//                 <br />
-//                 <button id="cancel-edge" onClick={this.toggleEditnodeModal}>
-//                   Cancel{" "}
-//                 </button>
-//                 <button id="Edge-button" onClick={this.updateNodeName}>
-//                   Save Change
-//                 </button>
-//               </div>
-//             </Modal>
-//             {/* </section> */}
-//             <button
-//               id="createRelation-button"
-//               title="create relationship"
-//               onClick={this.handleCreateRelation}
-//             >
-//               CreateRelation
-//             </button>
-//             <Modal
-//               isOpen={this.state.isCreateRelationActive}
-//               contentLabel="CreateRelation Modal"
-//               onRequestClose={this.state.toggleCreateRelationModalFalse}
-//               style={customStyle}
-//             >  
-//               <div id="Modal-header">Create Relationship from #inNodeID to #outNodeID 
-//                 <button id="hidemodal-button" onClick={this.toggleCreateRelationModalFalse}>Hide Modal</button>
-//               </div>
-//               {this.state.page === 1 ? (
-//                 <div id="modal-middle-div">
-//                 Class :   <select id="select-id"> {this.selectBoxList()} </select>
-//                 </div>
-//               ) : (
-//                 <div id="modal-middle-div">
-//                   Relation Classname : <hr />
-//                   <div id="inside-box"> This relationship require no attribute</div>
-//                 </div>
-//               )}
-//               {this.state.page === 1 ? (
-//                 <div id="modal-bottom-div"> 
-//                   Bottom modal 1 <hr />
-//                   <button id="modal-cancel-button" onClick={this.toggleCreateRelationModalFalse}>Cancel</button>
-//                   <button id="modal-next-button" onClick={this.handleNextPage}>
-//                     Next
-//                   </button>
-//                 </div>
-//               ) : (
-//                 <div id="modal-bottom-div">
-                 
-//                   Bottom modal 2 <hr />
-//                   <button onClick={this.InitializePage}> Back </button>
-//                   <button id="modal-cancel-button" onClick={this.toggleCreateRelationModalFalse} > Cancel</button>
-//                   <button id="Addedge-button" onClick={this.handleCreateRelationbutton}>Create Relation</button>
-//                 </div>
-//               )}
-//             </Modal>
-//             <button
-//               id="removeNode-button"
-//               title="remove node from canvas"
-//               onClick={this.handleRemoveNode}
-//             >
-             
-//               Remove
-//             </button>
-//             <button
-//               id="deleteNode-button"
-//               title="delete node from Database"
-//               onClick={this.toggleDeletenodeModal}
-//             >
-           
-//               Delete
-//             </button>
-//             <Modal
-//               isOpen={this.state.isDeleteNodeActivate}
-//               contentLabel="DeleteNodeModal"
-//               onRequestClose={this.toggleDeletenodeModal}
-//               style={customCreateEdgeModal}
-//             >
-//               <div id="top-deletenode-div"> DeleteNode </div>
-//               <div id="middle-deletenode-div">
-//                 Deleting node {this.state.nodeID} will permanantly be removed
-//                 from your Database
-//               </div>
-//               <div id="bottom-deletenode-div">
-//                 <button onClick={this.toggleDeletenodeModal}>
-//                   No,keep Node
-//                 </button>
-//                 <Button color="danger" onClick={this.handleDeleteNode}>
-                 
-//                   Yes,Delete Node!
-//                 </Button>
-//               </div>
-//             </Modal>
-//           </div>
-//         </div>
-//       );
-//     } else if (this.state.showMenu === false) {
-//       commandbox = null;
-//     }
+//    
 //     let relationbox;
 
-//     if (this.state.showRelationMenu === true) {
-//       relationbox = (
-//         <div id="relationMenu-div">
-//           Relationship Menu : {this.state.relationID}
-//           <button onClick={this.toggleEditRelationModal}> Edit Relationship </button>
-//         <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
-//                     onRequestClose={this.toggleEditRelationModal}
-//                     style = {customEditRStyle} > <div id="editRModal-header">  Edit Relationship 
-//              <button id="hidemodal-button" onClick={this.toggleEditRelationModal}>Hide Modal</button>
-//              <hr></hr>
-//              </div>
-            
-//                 <div id="editRmodal-middle-div"> relation <hr></hr>
-//                 <div id="ineditRmodal-middle-div">
-//                    inRelation <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
-//                        <select id="select-id"  > {this.selectBoxList()} </select> <br></br><br></br>
-//                      message   <input type="text" placeholder="Type message here...." className="msgTxt"  /> 
-//                        <select id="select-id"  > {this.selectBoxList()} </select>        <br></br><br></br>
-//                    outRelation  <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
-//                        <select id="select-id"  > {this.selectBoxList()} </select>
-//                    </div>
-//                 </div>
-//                 <br></br>
-//                 <div id="editRmodal-bottom-div">  
-//                 <button id="modal-cancel-button" onClick={this.toggleEditRelationModal}> Cancel </button>
-//                 <button id="Addnode-button" onClick={this.handleAddNodebutton} >Save Change</button>
-//                 </div>
-
-               
-//              </Modal>
-//           <button onClick={this.toggleDeleteRelationModal}>
-           
-//             Delete Relationship
-//           </button>
-//           <Modal
-//             isOpen={this.state.isDeleteRelationActivate}
-//             contentLabel="DeleteRelationModal"
-//             onRequestClose={this.toggleDeleteRelationModal}
-//             style={customCreateEdgeModal}
-//           >
-//             <div id="top-deletenode-div"> Delete Relation </div>
-//             <div id="middle-deletenode-div">
-             
-//               Deleting Relation {this.state.relationID} will permanantly be
-//               removed from your Database
-//             </div>
-//             <div id="bottom-deletenode-div">
-//               <button onClick={this.toggleDeleteRelationModal}>
-               
-//                 No,keep Relationship
-//               </button>
-//               <Button color="danger" onClick={this.handleDeleteRelation}>
-               
-//                 Yes,Delete Relationship!
-//               </Button>
-//             </div>
-//           </Modal>
-//         </div>
-//       );
-//     } else if (this.state.showRelationMenu === false) {
-//       relationbox = null;
-//     }
+  
 
 //     return (
 //       <div className="App">
@@ -1598,34 +1320,34 @@ export default connect(
                 //   console.log(this.state.isPropertyDisplay);
                 // }.bind(this),
 
-            //     deselectNode: function(event) {
-            //       console.log(event), this.toggleShowMenu();
-            //       // this.Resetalldisplaydata();
-            //       console.log(this.state.isPropertyDisplay);
-            //       //this.toggleRelationMenu();
-            //       this.setHideEdge();
-            //       this.setHideprop();
-            //       this.handleAlertFalse();
-            //       this.toggleCreateRAlertmsgFalse();
-            //     }.bind(this),
+                // deselectNode: function(event) {
+                //   console.log(event), this.toggleShowMenu();
+                //   // this.Resetalldisplaydata();
+                //   console.log(this.state.isPropertyDisplay);
+                //   //this.toggleRelationMenu();
+                //   this.setHideEdge();
+                //   this.setHideprop();
+                //   this.handleAlertFalse();
+                //   this.toggleCreateRAlertmsgFalse();
+                // }.bind(this),
 
-            //     selectEdge: function(event) {
-            //       this.handlerelationID(event.edges);
-            //       this.getinRelationNode();
-            //       this.getoutRelationNode();
-            //       this.toggleRelationMenu();
-            //       this.setDisplayEdge();
-            //       console.log(this.state.isPropertyDisplay);
-            //     }.bind(this),
-            //     deselectEdge: function(event) {
-            //       //console.log(event);
-            //       //console.log("This is popup!!")
-            //       this.toggleRelationMenu();
+                // selectEdge: function(event) {
+                //   this.handlerelationID(event.edges);
+                //   this.getinRelationNode();
+                //   this.getoutRelationNode();
+                //   this.toggleRelationMenu();
+                //   this.setDisplayEdge();
+                //   console.log(this.state.isPropertyDisplay);
+                // }.bind(this),
+                // deselectEdge: function(event) {
+                //   //console.log(event);
+                //   //console.log("This is popup!!")
+                //   this.toggleRelationMenu();
 
-            //       this.setHideEdge();
-            //       this.setHideprop();
-            //       console.log(this.state.isPropertyDisplay);
-            //     }.bind(this)
+                //   this.setHideEdge();
+                //   this.setHideprop();
+                //   console.log(this.state.isPropertyDisplay);
+                // }.bind(this)
             //   }}
             // />
         //   </div>

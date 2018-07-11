@@ -60,7 +60,7 @@ const GraphSetting = {
 
 }
   
-
+  
   const graphCanvasReducer = (state = GraphSetting,action) =>{
       switch(action.type){
           case 'ADDNODEACTION':

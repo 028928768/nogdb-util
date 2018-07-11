@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Graph from "react-graph-vis";
 import { connect} from 'react-redux';
 import {getnodeid} from '../actions/dataAction.js';
-import {shownodemenu,hidenodemenu} from '../actions/node-edgesmenu';
+import {shownodemenu,hidenodemenu,showedgemenu,hideedgemenu} from '../actions/node-edgesmenu';
 import Modal from "react-modal";
 import {TabContent,TabPane,Nav,NavItem,NavLink,Card,Button,CardTitle,CardText,Row,Col} from "reactstrap";
 
@@ -24,6 +24,12 @@ const mapStateToProps = state => {
       },
       HideNodeMenu : () => {
           dispatch(hidenodemenu())
+      },
+      ShowEdgeMenu : () => {
+        dispatch(showedgemenu())
+      },
+      HideEdgeMenu : () => {
+        dispatch(hideedgemenu())
       }
      
       
@@ -253,10 +259,80 @@ class Canvas extends Component {
              } else if (scale.NodeMenu === false) {
                commandbox = null;
              }
+             let relationbox;
+
+             if (scale.EdgeMenu === true) {
+              relationbox = (
+                <div id="relationMenu-div">
+                  Relationship Menu : 
+                  {/* {this.state.relationID} */}
+                  <button 
+                  // onClick={this.toggleEditRelationModal}
+                  > Edit Relationship </button>
+                {/* <Modal isOpen={this.state.isEditRelationActive} contentLabel = "EditRelationship Modal" 
+                            onRequestClose={this.toggleEditRelationModal}
+                            style = {customEditRStyle} > <div id="editRModal-header">  Edit Relationship 
+                     <button id="hidemodal-button" onClick={this.toggleEditRelationModal}>Hide Modal</button>
+                     <hr></hr>
+                     </div>
+                    
+                        <div id="editRmodal-middle-div"> relation <hr></hr>
+                        <div id="ineditRmodal-middle-div">
+                           inRelation <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                               <select id="select-id"  > {this.selectBoxList()} </select> <br></br><br></br>
+                             message   <input type="text" placeholder="Type message here...." className="msgTxt"  /> 
+                               <select id="select-id"  > {this.selectBoxList()} </select>        <br></br><br></br>
+                           outRelation  <input type="text" placeholder="Node name...." className="Nodetext" onChange={this.handleChange} />
+                               <select id="select-id"  > {this.selectBoxList()} </select>
+                           </div>
+                        </div>
+                        <br></br>
+                        <div id="editRmodal-bottom-div">  
+                        <button id="modal-cancel-button" onClick={this.toggleEditRelationModal}> Cancel </button>
+                        <button id="Addnode-button" onClick={this.handleAddNodebutton} >Save Change</button>
+                        </div>
+        
+                       
+                     </Modal> */}
+                  <button 
+                  // onClick={this.toggleDeleteRelationModal}
+                  >
+                    Delete Relationship
+                  </button>
+                  {/* <Modal
+                    isOpen={this.state.isDeleteRelationActivate}
+                    contentLabel="DeleteRelationModal"
+                    onRequestClose={this.toggleDeleteRelationModal}
+                    style={customCreateEdgeModal}
+                  >
+                    <div id="top-deletenode-div"> Delete Relation </div>
+                    <div id="middle-deletenode-div">
+                     
+                      Deleting Relation {this.state.relationID} will permanantly be
+                      removed from your Database
+                    </div>
+                    <div id="bottom-deletenode-div">
+                      <button onClick={this.toggleDeleteRelationModal}>
+                       
+                        No,keep Relationship
+                      </button>
+                      <Button color="danger" onClick={this.handleDeleteRelation}>
+                       
+                        Yes,Delete Relationship!
+                      </Button>
+                    </div>
+                  </Modal> */}
+                </div>
+              );
+            } else if (scale.EdgeMenu === false) {
+              relationbox = null;
+            }
+
 
         return (
             <div className="Canvas" align="center"> 
                 {commandbox}
+                {relationbox}
                 {console.log("NodeID :"+data.nodeID)}
                    <Graph
               graph={state.graphCanvas} 
@@ -280,13 +356,45 @@ class Canvas extends Component {
   
                     this.handleNodeID(event.nodes);
                     this.props.ShowNodeMenu();
-                    console.log(scale.NodeMenu)
+                    this.props.HideEdgeMenu();
                     // this.handleNodeClass();
                     // this.getNodeName();
                     // this.getCreateDate();
                     // this.toggleShowMenu();
                     // this.setDisplayprop();
                   }.bind(this),
+
+
+                  deselectNode: function(event) {
+                    console.log(event), 
+                    this.props.HideNodeMenu();
+                    // this.Resetalldisplaydata();
+                    //this.toggleRelationMenu();
+                    // this.setHideEdge();
+                    // this.setHideprop();
+                    // this.handleAlertFalse();
+                    // this.toggleCreateRAlertmsgFalse();
+                  }.bind(this),
+
+
+                  selectEdge: function(event) {
+                    // this.handlerelationID(event.edges);
+                    // this.getinRelationNode();
+                    // this.getoutRelationNode();
+                    this.props.ShowEdgeMenu();
+                    this.props.HideNodeMenu();
+                    // this.setDisplayEdge();
+                  }.bind(this),
+                  deselectEdge: function(event) {
+                    //console.log(event);
+                    //console.log("This is popup!!")
+                    // this.toggleRelationMenu();
+                    this.props.HideEdgeMenu();
+  
+                    // this.setHideEdge();
+                    // this.setHideprop();
+                    
+                  }.bind(this)
                  }
               }
               />
